@@ -36,6 +36,57 @@
   html, body { width: 100%; min-height: 100vh; background: #f0f0f0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color: var(--texto); }
   body { padding-bottom: 80px; }
 
+  /* ===== TELA DE LOGIN ===== */
+  #tela-login {
+    position: fixed; inset: 0; z-index: 9999;
+    background: linear-gradient(160deg, #0d3a6e 0%, #185FA5 60%, #1b7fc4 100%);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: 32px 24px;
+  }
+  #tela-login.hide { display: none; }
+  .login-logo { font-size: 52px; margin-bottom: 10px; }
+  .login-titulo { color: white; font-size: 22px; font-weight: 700; margin-bottom: 4px; }
+  .login-sub { color: rgba(255,255,255,0.72); font-size: 13px; margin-bottom: 36px; }
+  .login-card {
+    background: white; border-radius: 20px;
+    padding: 28px 24px; width: 100%; max-width: 360px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+  }
+  .login-label { font-size: 13px; font-weight: 600; color: var(--texto2); margin-bottom: 8px; display: block; }
+  .login-input {
+    width: 100%; height: 50px; border: 1.5px solid var(--borda);
+    border-radius: var(--radius-sm); padding: 0 16px; font-size: 18px;
+    letter-spacing: 6px; text-align: center; color: var(--texto);
+    background: var(--cinza); margin-bottom: 16px;
+  }
+  .login-input:focus { outline: none; border-color: var(--azul); background: white; }
+  .btn-login-senha {
+    width: 100%; height: 50px; background: var(--azul); color: white;
+    border: none; border-radius: var(--radius); font-size: 16px; font-weight: 600;
+    cursor: pointer; margin-bottom: 12px;
+  }
+  .btn-login-bio {
+    width: 100%; height: 50px; background: var(--cinza); color: var(--texto);
+    border: 1.5px solid var(--borda); border-radius: var(--radius); font-size: 15px; font-weight: 600;
+    cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;
+  }
+  .btn-login-bio:active { opacity: 0.8; }
+  .login-erro { color: var(--vermelho); font-size: 13px; text-align: center; margin-top: 8px; min-height: 20px; }
+  .login-config-link { color: rgba(255,255,255,0.6); font-size: 12px; margin-top: 20px; text-decoration: underline; cursor: pointer; }
+  .login-sem-senha { color: rgba(255,255,255,0.55); font-size: 12px; margin-top: 10px; cursor: pointer; }
+
+  /* Config senha modal */
+  .modal-config-senha {
+    display: none; position: fixed; inset: 0; z-index: 10000;
+    background: rgba(0,0,0,0.55); align-items: center; justify-content: center; padding: 20px;
+  }
+  .modal-config-senha.open { display: flex; }
+  .modal-config-senha-box {
+    background: white; border-radius: 20px; padding: 28px 24px;
+    width: 100%; max-width: 340px;
+  }
+  .modal-config-senha-box h3 { font-size: 17px; font-weight: 700; margin-bottom: 16px; }
+
   /* HEADER */
   .header {
     background: var(--azul);
@@ -50,6 +101,11 @@
     background: #E24B4A; color: white; border-radius: 50%;
     width: 20px; height: 20px; font-size: 11px; font-weight: 700;
     margin-left: 6px; vertical-align: middle;
+  }
+  .btn-logout {
+    position: absolute; right: 14px; top: 14px;
+    background: rgba(255,255,255,0.15); color: white; border: none;
+    border-radius: 8px; padding: 6px 12px; font-size: 12px; font-weight: 600; cursor: pointer;
   }
 
   /* ALERTAS */
@@ -118,6 +174,65 @@
   .field input:focus, .field select:focus { outline: none; border-color: var(--azul); }
   .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 
+  /* TOGGLE RECORRENTE */
+  .toggle-recorrente-wrap {
+    display: flex; align-items: center; gap: 12px;
+    background: var(--cinza); border-radius: var(--radius-sm);
+    padding: 12px 14px; cursor: pointer; user-select: none;
+    border: 2px solid transparent; transition: all 0.2s;
+  }
+  .toggle-recorrente-wrap.ativo {
+    background: #EDE9FE; border-color: #7C3AED;
+  }
+  .toggle-switch {
+    width: 46px; height: 26px; background: #ccc; border-radius: 13px;
+    position: relative; transition: background 0.2s; flex-shrink: 0;
+  }
+  .toggle-switch::after {
+    content: ''; position: absolute;
+    width: 20px; height: 20px; background: white; border-radius: 50%;
+    top: 3px; left: 3px; transition: transform 0.2s;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.25);
+  }
+  .toggle-recorrente-wrap.ativo .toggle-switch { background: #7C3AED; }
+  .toggle-recorrente-wrap.ativo .toggle-switch::after { transform: translateX(20px); }
+  .toggle-recorrente-txt { flex: 1; }
+  .toggle-recorrente-txt strong { font-size: 14px; font-weight: 600; color: var(--texto); display: block; }
+  .toggle-recorrente-txt span { font-size: 12px; color: var(--texto2); }
+  .toggle-recorrente-wrap.ativo .toggle-recorrente-txt strong { color: #5B21B6; }
+  .toggle-status-badge {
+    font-size: 11px; font-weight: 700; padding: 3px 9px; border-radius: 20px;
+    background: #ccc; color: #666;
+  }
+  .toggle-recorrente-wrap.ativo .toggle-status-badge { background: #7C3AED; color: white; }
+
+  /* FOTOS DO CLIENTE */
+  .fotos-grid {
+    display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-top: 8px;
+  }
+  .foto-slot {
+    aspect-ratio: 1; border-radius: var(--radius-sm);
+    border: 2px dashed var(--borda); overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--cinza); cursor: pointer; position: relative;
+    transition: border-color 0.15s;
+  }
+  .foto-slot:hover { border-color: var(--azul); }
+  .foto-slot img { width: 100%; height: 100%; object-fit: cover; }
+  .foto-slot .foto-add { font-size: 22px; color: var(--texto2); }
+  .foto-slot .foto-remove {
+    position: absolute; top: 2px; right: 2px;
+    background: rgba(0,0,0,0.55); color: white; border: none;
+    border-radius: 50%; width: 20px; height: 20px; font-size: 12px;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    line-height: 1;
+  }
+  .foto-slot .foto-num {
+    position: absolute; bottom: 2px; left: 3px;
+    font-size: 10px; font-weight: 700; color: var(--texto2);
+  }
+  input[type="file"].foto-input { display: none; }
+
   /* BUTTONS */
   .btn-salvar {
     width: 100%; height: 50px; background: var(--azul); color: white;
@@ -172,6 +287,13 @@
     border: none; border-radius: var(--radius-sm); font-size: 14px; font-weight: 600;
     cursor: pointer; margin-top: 12px; display: flex; align-items: center; justify-content: center; gap: 6px;
   }
+  .btn-whatsapp {
+    width: 100%; height: 48px; background: #25D366; color: white;
+    border: none; border-radius: var(--radius); font-size: 15px; font-weight: 600;
+    cursor: pointer; margin-top: 14px; display: flex; align-items: center; justify-content: center; gap: 8px;
+    box-shadow: 0 2px 10px rgba(37,211,102,0.35);
+  }
+  .btn-whatsapp:active { opacity: 0.85; transform: scale(0.98); }
 
   /* FILTROS */
   .filter-row { display: flex; gap: 6px; margin-bottom: 12px; overflow-x: auto; padding-bottom: 2px; }
@@ -201,7 +323,9 @@
     display: flex; align-items: center; justify-content: center;
     font-size: 15px; font-weight: 700;
     background: var(--azul-claro); color: var(--azul);
+    overflow: hidden;
   }
+  .avatar img { width: 100%; height: 100%; object-fit: cover; }
   .avatar.av-hoje { background: var(--vermelho-claro); color: var(--vermelho); }
   .avatar.av-amanha { background: var(--amarelo-claro); color: var(--amarelo); }
   .cli-nome { font-size: 15px; font-weight: 600; color: var(--texto); }
@@ -231,6 +355,32 @@
   }
   .stat-val { font-size: 26px; font-weight: 700; color: var(--texto); }
   .stat-lbl { font-size: 12px; color: var(--texto2); margin-top: 3px; }
+
+  /* FLUXO DE CAIXA */
+  .fluxo-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+  .fluxo-card {
+    background: var(--branco); border-radius: var(--radius);
+    padding: 14px 12px; box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    border-top: 3px solid transparent;
+  }
+  .fluxo-card.fc-debito { border-top-color: #E24B4A; }
+  .fluxo-card.fc-recebido { border-top-color: #1D9E75; }
+  .fluxo-card.fc-saldo { border-top-color: var(--azul); grid-column: 1 / -1; }
+  .fluxo-icon { font-size: 20px; margin-bottom: 6px; }
+  .fluxo-label { font-size: 11px; font-weight: 700; color: var(--texto2); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; }
+  .fluxo-val { font-size: 20px; font-weight: 700; color: var(--texto); line-height: 1.1; }
+  .fluxo-card.fc-debito .fluxo-val { color: var(--vermelho); }
+  .fluxo-card.fc-recebido .fluxo-val { color: #1D9E75; }
+  .fluxo-card.fc-saldo .fluxo-val { color: var(--azul); font-size: 22px; }
+  .fluxo-periodo-row {
+    display: flex; gap: 6px; margin-bottom: 12px; justify-content: flex-end;
+  }
+  .pbtn {
+    padding: 5px 12px; border-radius: 20px; border: 1.5px solid var(--borda);
+    font-size: 12px; font-weight: 600; background: var(--branco); color: var(--texto2); cursor: pointer;
+  }
+  .pbtn.active { background: var(--azul); color: white; border-color: var(--azul); }
+  .fluxo-sub { font-size: 11px; color: var(--texto2); margin-top: 4px; }
 
   /* CALC RESULT */
   .calc-box {
@@ -276,6 +426,26 @@
   .modal-alerta-amanha { background: var(--amarelo-claro); border: 1px solid var(--amarelo-borda); border-radius: var(--radius-sm); padding: 10px 14px; margin-bottom: 14px; font-size: 13px; color: var(--amarelo); font-weight: 600; display: flex; align-items: center; gap: 8px; }
   .modal-section-title { font-size: 12px; font-weight: 700; color: var(--texto2); text-transform: uppercase; letter-spacing: 0.05em; margin: 14px 0 8px; }
 
+  /* Modal fotos (visualizador) */
+  .modal-fotos-grid { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+  .modal-foto-thumb {
+    width: 60px; height: 60px; border-radius: 8px; object-fit: cover;
+    cursor: pointer; border: 2px solid var(--borda);
+  }
+  /* Lightbox */
+  #lightbox {
+    display: none; position: fixed; inset: 0; z-index: 1000;
+    background: rgba(0,0,0,0.88); align-items: center; justify-content: center;
+  }
+  #lightbox.open { display: flex; }
+  #lightbox img { max-width: 94%; max-height: 90vh; border-radius: 10px; object-fit: contain; }
+  #lightbox-close {
+    position: absolute; top: 16px; right: 16px;
+    background: white; color: #222; border: none; border-radius: 50%;
+    width: 36px; height: 36px; font-size: 18px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+  }
+
   /* EMPTY */
   .empty { text-align: center; padding: 48px 20px; color: var(--texto2); font-size: 14px; }
   .empty-icon { font-size: 48px; display: block; margin-bottom: 12px; opacity: 0.3; }
@@ -290,9 +460,7 @@
   .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
   /* BUSCA */
-  .busca-row {
-    display: flex; gap: 8px; margin-bottom: 12px; align-items: center;
-  }
+  .busca-row { display: flex; gap: 8px; margin-bottom: 12px; align-items: center; }
   .busca-input {
     flex: 1; height: 42px; border: 1.5px solid var(--borda);
     border-radius: var(--radius-sm); padding: 0 14px 0 38px;
@@ -304,10 +472,7 @@
 
   /* GRÁFICO */
   .chart-wrap { margin-top: 14px; }
-  .chart-bar-row {
-    display: flex; align-items: center; gap: 8px;
-    margin-bottom: 7px; font-size: 12px;
-  }
+  .chart-bar-row { display: flex; align-items: center; gap: 8px; margin-bottom: 7px; font-size: 12px; }
   .chart-label { width: 90px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--texto2); }
   .chart-bar-bg { flex: 1; height: 20px; background: var(--cinza2); border-radius: 4px; overflow: hidden; }
   .chart-bar-fill { height: 100%; border-radius: 4px; transition: width 0.4s ease; display: flex; align-items: center; justify-content: flex-end; padding-right: 6px; }
@@ -321,20 +486,17 @@
     border: none; border-radius: var(--radius-sm); font-size: 13px; font-weight: 600;
     cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px;
   }
-  .btn-backup:active { opacity: 0.8; }
   .btn-restaurar {
     flex: 1; height: 44px; background: var(--verde-claro); color: var(--verde);
     border: none; border-radius: var(--radius-sm); font-size: 13px; font-weight: 600;
     cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px;
   }
-  .btn-restaurar:active { opacity: 0.8; }
   #input-restaurar { display: none; }
 
   .btn-juros-pago {
     flex: 1; height: 36px; background: #FFF0D6; color: #8B5E00;
     border: 1.5px solid #F5C060; border-radius: var(--radius-sm); font-size: 12px; font-weight: 600; cursor: pointer;
   }
-  .btn-juros-pago:active { opacity: 0.8; }
   .badge-recorrente {
     display: inline-flex; align-items: center; gap: 4px;
     background: #EDE9FE; color: #5B21B6; border-radius: 20px;
@@ -352,43 +514,94 @@
 </head>
 <body>
 
-<div class="header">
-  <h1>&#128181; Gestão de Débitos <span id="bell-count" class="bell-count" style="display:none"></span></h1>
+<!-- ===== TELA DE LOGIN ===== -->
+<div id="tela-login">
+  <div class="login-logo">💰</div>
+  <div class="login-titulo">Gestão de Débitos</div>
+  <div class="login-sub">Acesso seguro ao sistema</div>
+  <div class="login-card">
+    <label class="login-label">Senha de acesso</label>
+    <input class="login-input" type="password" id="login-senha-input" placeholder="••••" maxlength="20" onkeydown="if(event.key==='Enter')entrarComSenha()">
+    <button class="btn-login-senha" onclick="entrarComSenha()">🔓 Entrar</button>
+    <button class="btn-login-bio" id="btn-bio" onclick="entrarComBiometria()" style="display:none">
+      <span id="bio-icon">👆</span> Usar Digital / Face ID
+    </button>
+    <div class="login-erro" id="login-erro"></div>
+  </div>
+  <span class="login-config-link" onclick="abrirConfigSenha()">⚙️ Configurar senha</span>
+  <span class="login-sem-senha" id="btn-sem-senha" onclick="entrarSemSenha()">Entrar sem senha (primeira vez)</span>
+</div>
+
+<!-- Modal configurar senha -->
+<div class="modal-config-senha" id="modal-config-senha">
+  <div class="modal-config-senha-box">
+    <h3>⚙️ Configurar senha</h3>
+    <div class="field">
+      <label class="login-label">Nova senha</label>
+      <input class="login-input" type="password" id="nova-senha-1" placeholder="••••" style="font-size:18px;letter-spacing:6px;text-align:center;height:50px;margin-bottom:0" maxlength="20">
+    </div>
+    <div class="field" style="margin-top:10px">
+      <label class="login-label">Confirmar senha</label>
+      <input class="login-input" type="password" id="nova-senha-2" placeholder="••••" style="font-size:18px;letter-spacing:6px;text-align:center;height:50px;margin-bottom:0" maxlength="20">
+    </div>
+    <div class="login-erro" id="config-senha-erro"></div>
+    <div style="display:flex;gap:8px;margin-top:16px">
+      <button class="btn-modal-fechar" onclick="fecharConfigSenha()">Cancelar</button>
+      <button class="btn-salvar" onclick="salvarNovaSenha()" style="flex:1;height:46px">Salvar</button>
+    </div>
+    <div style="margin-top:12px">
+      <button onclick="removerSenha()" style="background:none;border:none;color:var(--vermelho);font-size:13px;cursor:pointer;text-decoration:underline">Remover senha (desativar login)</button>
+    </div>
+  </div>
+</div>
+
+<div id="app" style="display:none">
+
+<div class="header" style="position:relative">
+  <h1>💰 Gestão de Débitos <span id="bell-count" class="bell-count" style="display:none"></span></h1>
   <p id="data-label"></p>
+  <button class="btn-logout" onclick="sair()">🚪 Sair</button>
 </div>
 
 <div id="painel-alertas"></div>
 
 <div class="tabs">
   <button class="tab active" onclick="showTab('novo')" id="tab-novo">
-    <span class="tab-icon">&#43;&#128100;</span>
+    <span class="tab-icon">➕👤</span>
     <span>Cadastrar</span>
   </button>
   <button class="tab" onclick="showTab('clientes')" id="tab-clientes">
-    <span class="tab-icon">&#128101;</span>
+    <span class="tab-icon">👥</span>
     <span>Clientes</span>
   </button>
   <button class="tab" onclick="showTab('calc')" id="tab-calc">
-    <span class="tab-icon">&#129518;</span>
+    <span class="tab-icon">🧮</span>
     <span>Calcular</span>
   </button>
   <button class="tab" onclick="showTab('resumo')" id="tab-resumo">
-    <span class="tab-icon">&#128202;</span>
+    <span class="tab-icon">📊</span>
     <span>Resumo</span>
   </button>
 </div>
 
 <!-- CADASTRAR / EDITAR -->
 <div class="section active" id="sec-novo">
-  <div class="edit-banner" id="edit-banner">&#9998; Modo Edição — alterando cadastro do cliente</div>
+  <div class="edit-banner" id="edit-banner">✏️ Modo Edição — alterando cadastro do cliente</div>
   <div class="card">
-    <p class="card-title">&#128100; Dados do cliente</p>
+    <p class="card-title">👤 Dados do cliente</p>
     <div class="field"><label>Nome completo *</label><input id="f-nome" type="text" placeholder="Ex: João da Silva"></div>
     <div class="field"><label>Telefone</label><input id="f-tel" type="tel" placeholder="(85) 99999-9999"></div>
     <div class="field"><label>CPF / Identificador</label><input id="f-cpf" type="text" placeholder="000.000.000-00"></div>
+    <div class="field">
+      <label>Fotos do cliente (até 5)</label>
+      <div class="fotos-grid" id="fotos-grid">
+        <!-- slots gerados pelo JS -->
+      </div>
+      <input type="file" class="foto-input" id="foto-input-hidden" accept="image/*" onchange="fotoSelecionada(event)">
+    </div>
   </div>
   <div class="card">
-    <p class="card-title">&#128176; Condições do Débito</p>
+    <p class="card-title">💰 Condições do Débito</p>
     <div class="field"><label>Valor do débito (R$) *</label><input id="f-valor" type="number" inputmode="decimal" placeholder="0,00" min="0" step="0.01"></div>
     <div class="row2">
       <div class="field"><label>Período de juros</label>
@@ -407,17 +620,21 @@
       <div class="field"><label>Data do débito</label><input id="f-data" type="date" onchange="autoVencimento()"></div>
       <div class="field"><label>Vencimento</label><input id="f-venc" type="date"></div>
     </div>
+    <!-- TOGGLE RECORRENTE -->
     <div class="field">
-      <label class="checkbox-label" style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:14px;font-weight:600;color:var(--texto)">
-        <input type="checkbox" id="f-recorrente" style="width:20px;height:20px;accent-color:var(--azul);cursor:pointer">
-        ✅ Débito recorrente
-        <span style="font-size:12px;font-weight:400;color:var(--texto2)">(múltiplos períodos)</span>
-      </label>
+      <div class="toggle-recorrente-wrap" id="toggle-recorrente-wrap" onclick="toggleRecorrente()">
+        <div class="toggle-switch" id="toggle-switch"></div>
+        <div class="toggle-recorrente-txt">
+          <strong id="toggle-recorrente-label">Débito recorrente</strong>
+          <span>Múltiplos períodos</span>
+        </div>
+        <span class="toggle-status-badge" id="toggle-status-badge">INATIVO</span>
+      </div>
     </div>
     <div class="field"><label>Observações</label><input id="f-obs" type="text" placeholder="Opcional"></div>
   </div>
-  <button class="btn-cancelar-edit" id="btn-cancelar-edit" onclick="cancelarEdicao()" style="display:none">&#10005; Cancelar edição</button>
-  <button class="btn-salvar" id="btn-salvar" onclick="salvarForm()">&#128190; Salvar cliente</button>
+  <button class="btn-cancelar-edit" id="btn-cancelar-edit" onclick="cancelarEdicao()" style="display:none">✕ Cancelar edição</button>
+  <button class="btn-salvar" id="btn-salvar" onclick="salvarForm()">💾 Salvar cliente</button>
 </div>
 
 <!-- CLIENTES -->
@@ -427,20 +644,20 @@
   </div>
   <div class="filter-row">
     <button class="fbtn active" onclick="filtrar('todos',this)">Todos</button>
-    <button class="fbtn fbtn-alert" onclick="filtrar('urgente',this)">&#128276; Urgente</button>
+    <button class="fbtn fbtn-alert" onclick="filtrar('urgente',this)">🔔 Urgente</button>
     <button class="fbtn" onclick="filtrar('em_dia',this)">Em dia</button>
     <button class="fbtn" onclick="filtrar('vencido',this)">Vencidos</button>
     <button class="fbtn" onclick="filtrar('pago',this)">Pagos</button>
   </div>
   <div id="lista-clientes">
-    <div class="empty"><span class="empty-icon">&#128101;</span>Nenhum cliente cadastrado ainda</div>
+    <div class="empty"><span class="empty-icon">👤</span>Nenhum cliente cadastrado ainda</div>
   </div>
 </div>
 
 <!-- CALCULAR -->
 <div class="section" id="sec-calc">
   <div class="card">
-    <p class="card-title">&#129518; Simulação de juros compostos</p>
+    <p class="card-title">🧮 Simulação de juros compostos</p>
     <div class="field"><label>Valor principal (R$)</label><input id="c-valor" type="number" inputmode="decimal" placeholder="1000,00" oninput="calcular()"></div>
     <div class="row2">
       <div class="field"><label>Período</label>
@@ -461,16 +678,53 @@
 <!-- RESUMO -->
 <div class="section" id="sec-resumo">
   <div class="stats" id="stats-row"></div>
+
+  <!-- FLUXO DE CAIXA -->
   <div class="card">
-    <p class="card-title">&#128202; Débitos por cliente (top 8)</p>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+      <p class="card-title" style="margin-bottom:0">💵 Fluxo de Caixa</p>
+      <div class="fluxo-periodo-row" style="margin-bottom:0">
+        <button class="pbtn active" id="pbtn-mes" onclick="setFluxoPeriodo('mes',this)">Mês</button>
+        <button class="pbtn" id="pbtn-semestre" onclick="setFluxoPeriodo('semestre',this)">Semestre</button>
+        <button class="pbtn" id="pbtn-ano" onclick="setFluxoPeriodo('ano',this)">Ano</button>
+      </div>
+    </div>
+    <div class="fluxo-cards">
+      <div class="fluxo-card fc-debito">
+        <div class="fluxo-icon">🔴</div>
+        <div class="fluxo-label">Dinheiro em Débito</div>
+        <div class="fluxo-val" id="fc-debito-val">R$ 0,00</div>
+        <div class="fluxo-sub" id="fc-debito-qtd">0 clientes em aberto</div>
+      </div>
+      <div class="fluxo-card fc-recebido">
+        <div class="fluxo-icon">🟢</div>
+        <div class="fluxo-label">Dinheiro Recebido</div>
+        <div class="fluxo-val" id="fc-recebido-val">R$ 0,00</div>
+        <div class="fluxo-sub" id="fc-recebido-qtd">0 pagamentos</div>
+      </div>
+      <div class="fluxo-card fc-saldo">
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <div>
+            <div class="fluxo-icon">📈</div>
+            <div class="fluxo-label">Saldo do Período</div>
+            <div class="fluxo-val" id="fc-saldo-val">R$ 0,00</div>
+            <div class="fluxo-sub" id="fc-saldo-periodo">Período: este mês</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <p class="card-title">📊 Débitos por cliente (top 8)</p>
     <div class="chart-wrap" id="chart-debitos"></div>
   </div>
   <div class="card">
-    <p class="card-title">&#128196; Backup dos dados</p>
+    <p class="card-title">📄 Backup dos dados</p>
     <p style="font-size:13px;color:var(--texto2);margin-bottom:4px;">Exporte todos os débitos para um arquivo JSON ou restaure um backup anterior.</p>
     <div class="backup-row">
-      <button class="btn-backup" onclick="exportarBackup()">&#11015; Exportar backup</button>
-      <button class="btn-restaurar" onclick="document.getElementById('input-restaurar').click()">&#11014; Restaurar backup</button>
+      <button class="btn-backup" onclick="exportarBackup()">⬇ Exportar backup</button>
+      <button class="btn-restaurar" onclick="document.getElementById('input-restaurar').click()">⬆ Restaurar backup</button>
     </div>
     <input type="file" id="input-restaurar" accept=".json" onchange="importarBackup(event)">
   </div>
@@ -485,24 +739,164 @@
     <div id="modal-body"></div>
     <div class="modal-acoes">
       <button class="btn-modal-fechar" onclick="fecharModal()">Fechar</button>
-      <button class="btn-modal-juros" id="modal-btn-juros" onclick="jurosPago(modalIdx);fecharModal()">&#128176; Juros Pago</button>
-      <button class="btn-modal-pagar" id="modal-btn-pagar" onclick="marcarPago()">&#10003; Marcar pago</button>
-      <button class="btn-modal-pdf" id="modal-btn-pdf" onclick="gerarPDF()">&#128196; PDF</button>
+      <button class="btn-modal-juros" id="modal-btn-juros" onclick="jurosPago(modalIdx);fecharModal()">💰 Juros Pago</button>
+      <button class="btn-modal-pagar" id="modal-btn-pagar" onclick="marcarPago()">✓ Marcar pago</button>
+      <button class="btn-modal-pdf" id="modal-btn-pdf" onclick="gerarPDF()">📄 PDF</button>
     </div>
   </div>
 </div>
 
+<!-- LIGHTBOX -->
+<div id="lightbox">
+  <button id="lightbox-close" onclick="fecharLightbox()">✕</button>
+  <img id="lightbox-img" src="" alt="Foto ampliada">
+</div>
+
 <div class="toast" id="toast"></div>
 
+</div><!-- /#app -->
+
 <script>
+// ===== CONFIGURAÇÕES =====
 var DB_KEY = 'deb_v4';
+var SENHA_KEY = 'deb_senha';
+var BIO_KEY = 'deb_bio_ok';
+var FLUXO_PERIODO = 'mes';
+
 var clientes = [];
 var modalIdx = -1;
 var filtroAtivo = 'todos';
-var editIdx = -1; // índice do cliente sendo editado (-1 = novo cadastro)
+var editIdx = -1;
+var recorrenteAtivo = false;
+var fotoSlotAtivo = -1; // qual slot de foto está sendo editado
+var fotosTemp = [null,null,null,null,null]; // fotos em edição (base64 ou null)
 
+// ===== LOGIN / SEGURANÇA =====
+function getSenhaHash() { return localStorage.getItem(SENHA_KEY) || ''; }
+function temSenha() { return !!getSenhaHash(); }
+function hashSimples(str) {
+  var h = 0;
+  for (var i = 0; i < str.length; i++) { h = (Math.imul(31, h) + str.charCodeAt(i)) | 0; }
+  return h.toString(36);
+}
+
+function verificarLogin() {
+  var telaLogin = document.getElementById('tela-login');
+  var app = document.getElementById('app');
+  if (!temSenha()) {
+    // Sem senha configurada — mostrar opção de entrar sem senha
+    document.getElementById('btn-sem-senha').style.display = 'block';
+    telaLogin.classList.remove('hide');
+    app.style.display = 'none';
+    return;
+  }
+  document.getElementById('btn-sem-senha').style.display = 'none';
+  // Checar suporte biometria
+  if (window.PublicKeyCredential) {
+    document.getElementById('btn-bio').style.display = 'flex';
+    // Tentar detectar se é Touch ID ou Face ID
+    var isMobile = /iPhone|iPad|Android/i.test(navigator.userAgent);
+    document.getElementById('bio-icon').textContent = isMobile ? '🤳' : '👆';
+    document.getElementById('btn-bio').childNodes[1].textContent = isMobile ? ' Usar Face ID / Digital' : ' Usar Digital';
+  }
+  telaLogin.classList.remove('hide');
+  app.style.display = 'none';
+}
+
+function entrarSemSenha() {
+  if (temSenha()) { toast('Use sua senha para entrar.'); return; }
+  abrirApp();
+}
+
+function entrarComSenha() {
+  var input = document.getElementById('login-senha-input').value;
+  var err = document.getElementById('login-erro');
+  if (!temSenha()) { abrirApp(); return; }
+  if (hashSimples(input) === getSenhaHash()) {
+    err.textContent = '';
+    abrirApp();
+  } else {
+    err.textContent = '❌ Senha incorreta. Tente novamente.';
+    document.getElementById('login-senha-input').value = '';
+    document.getElementById('login-senha-input').focus();
+  }
+}
+
+async function entrarComBiometria() {
+  var err = document.getElementById('login-erro');
+  if (!window.PublicKeyCredential) { err.textContent = 'Biometria não suportada neste dispositivo.'; return; }
+  try {
+    // Usar WebAuthn com autenticação local (plataforma)
+    var challenge = new Uint8Array(32);
+    crypto.getRandomValues(challenge);
+    await navigator.credentials.get({
+      publicKey: {
+        challenge: challenge,
+        timeout: 60000,
+        userVerification: 'required',
+        rpId: window.location.hostname || 'localhost',
+        allowCredentials: []
+      }
+    });
+    err.textContent = '';
+    abrirApp();
+  } catch(e) {
+    // Fallback: tentar API de autenticação de plataforma mais simples
+    if (navigator.credentials && window.PublicKeyCredential && PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable) {
+      try {
+        var available = await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable();
+        if (!available) { err.textContent = 'Biometria não disponível. Use a senha.'; return; }
+      } catch(e2) {}
+    }
+    err.textContent = 'Autenticação biométrica falhou. Use a senha.';
+  }
+}
+
+function abrirApp() {
+  document.getElementById('tela-login').classList.add('hide');
+  document.getElementById('app').style.display = 'block';
+  renderAlertasTopo();
+}
+
+function sair() {
+  if (!temSenha()) return; // sem senha, não faz sentido bloquear
+  document.getElementById('tela-login').classList.remove('hide');
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('login-senha-input').value = '';
+  document.getElementById('login-erro').textContent = '';
+}
+
+function abrirConfigSenha() {
+  document.getElementById('modal-config-senha').classList.add('open');
+  document.getElementById('nova-senha-1').value = '';
+  document.getElementById('nova-senha-2').value = '';
+  document.getElementById('config-senha-erro').textContent = '';
+}
+function fecharConfigSenha() {
+  document.getElementById('modal-config-senha').classList.remove('open');
+}
+function salvarNovaSenha() {
+  var s1 = document.getElementById('nova-senha-1').value;
+  var s2 = document.getElementById('nova-senha-2').value;
+  var err = document.getElementById('config-senha-erro');
+  if (!s1) { err.textContent = 'Digite uma senha.'; return; }
+  if (s1 !== s2) { err.textContent = 'As senhas não coincidem.'; return; }
+  if (s1.length < 4) { err.textContent = 'Senha deve ter ao menos 4 caracteres.'; return; }
+  localStorage.setItem(SENHA_KEY, hashSimples(s1));
+  fecharConfigSenha();
+  toast('✅ Senha configurada com sucesso!');
+  document.getElementById('btn-sem-senha').style.display = 'none';
+}
+function removerSenha() {
+  if (!confirm('Remover a senha? O sistema ficará sem proteção.')) return;
+  localStorage.removeItem(SENHA_KEY);
+  fecharConfigSenha();
+  toast('Senha removida.');
+  document.getElementById('btn-sem-senha').style.display = 'block';
+}
+
+// ===== DADOS =====
 try { clientes = JSON.parse(localStorage.getItem(DB_KEY) || '[]'); } catch(e) { clientes = []; }
-// Migrar dados antigos se existirem
 try {
   var old = JSON.parse(localStorage.getItem('emp_v3') || '[]');
   if (old.length && !clientes.length) { clientes = old; salvar(); }
@@ -557,10 +951,10 @@ function vencStatus(c) {
 }
 
 function badgeHtml(s) {
-  if (s==='pago')    return '<span class="badge b-pago">&#10003; Pago</span>';
+  if (s==='pago')    return '<span class="badge b-pago">✓ Pago</span>';
   if (s==='vencido') return '<span class="badge b-vencido">Vencido</span>';
-  if (s==='hoje')    return '<span class="badge b-hoje">&#9201; Vence HOJE</span>';
-  if (s==='amanha')  return '<span class="badge b-amanha">&#128276; Vence amanhã</span>';
+  if (s==='hoje')    return '<span class="badge b-hoje">⏱ Vence HOJE</span>';
+  if (s==='amanha')  return '<span class="badge b-amanha">🔔 Vence amanhã</span>';
   return '<span class="badge b-ok">Em aberto</span>';
 }
 
@@ -570,12 +964,8 @@ function calcJuros(principal, taxa, qtd) {
   return { total: total, juros: total - principal };
 }
 
-// Calcula juros proporcional por dias (para pagamento antecipado)
-// Usa juros compostos com expoente fracionário (dias decorridos / dias do período)
-// Mínimo: 1 dia de juros (nunca zero mesmo no dia do débito)
 function calcJurosDias(principal, taxa, periodo, diasDecorridos) {
   var diasPeriodo = {dia:1, semanal:7, quinzenal:15, mensal:30}[periodo] || 30;
-  // Garante mínimo de 1 dia para sempre haver juros proporcional
   var diasEfetivos = Math.max(1, diasDecorridos);
   var qtdPeriodos = diasEfetivos / diasPeriodo;
   var t = taxa / 100;
@@ -583,9 +973,7 @@ function calcJurosDias(principal, taxa, periodo, diasDecorridos) {
   return { total: total, juros: total - principal, qtdPeriodos: qtdPeriodos, diasEfetivos: diasEfetivos };
 }
 
-function diasDoPeriodo(p) {
-  return {dia:1, semanal:7, quinzenal:15, mensal:30}[p] || 30;
-}
+function diasDoPeriodo(p) { return {dia:1, semanal:7, quinzenal:15, mensal:30}[p] || 30; }
 
 function somarDias(dataStr, dias) {
   var d = new Date(dataStr + 'T00:00:00');
@@ -603,8 +991,7 @@ function autoVencimento() {
 
 function initDatas() {
   var h = new Date();
-  var fmt = function(d){ return d.toISOString().split('T')[0]; };
-  var dataHoje = fmt(h);
+  var dataHoje = h.toISOString().split('T')[0];
   document.getElementById('f-data').value = dataHoje;
   var periodo = document.getElementById('f-periodo').value || 'semanal';
   document.getElementById('f-venc').value = somarDias(dataHoje, diasDoPeriodo(periodo));
@@ -619,28 +1006,126 @@ function setDataLabel() {
 }
 setDataLabel();
 
+// ===== TOGGLE RECORRENTE =====
+function toggleRecorrente() {
+  recorrenteAtivo = !recorrenteAtivo;
+  atualizarToggleRecorrente();
+}
+function atualizarToggleRecorrente() {
+  var wrap = document.getElementById('toggle-recorrente-wrap');
+  var badge = document.getElementById('toggle-status-badge');
+  if (recorrenteAtivo) {
+    wrap.classList.add('ativo');
+    badge.textContent = 'ATIVO';
+  } else {
+    wrap.classList.remove('ativo');
+    badge.textContent = 'INATIVO';
+  }
+}
+
+// ===== FOTOS =====
+function renderFotosGrid() {
+  var grid = document.getElementById('fotos-grid');
+  if (!grid) return;
+  var html = '';
+  for (var i = 0; i < 5; i++) {
+    var foto = fotosTemp[i];
+    html += '<div class="foto-slot" onclick="clicarFotoSlot(' + i + ')" id="foto-slot-' + i + '">';
+    if (foto) {
+      html += '<img src="' + foto + '" alt="Foto ' + (i+1) + '">';
+      html += '<button class="foto-remove" onclick="removerFoto(event,' + i + ')">✕</button>';
+    } else {
+      html += '<span class="foto-add">📷</span>';
+      html += '<span class="foto-num">' + (i+1) + '</span>';
+    }
+    html += '</div>';
+  }
+  grid.innerHTML = html;
+}
+renderFotosGrid();
+
+function clicarFotoSlot(idx) {
+  if (fotosTemp[idx]) return; // já tem foto — clique não abre (o ✕ remove)
+  fotoSlotAtivo = idx;
+  document.getElementById('foto-input-hidden').click();
+}
+
+function fotoSelecionada(event) {
+  var file = event.target.files[0];
+  if (!file) return;
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    // Redimensionar para economizar espaço no localStorage
+    comprimirImagem(e.target.result, function(base64) {
+      fotosTemp[fotoSlotAtivo] = base64;
+      renderFotosGrid();
+    });
+  };
+  reader.readAsDataURL(file);
+  event.target.value = '';
+}
+
+function comprimirImagem(base64, callback) {
+  var img = new Image();
+  img.onload = function() {
+    var canvas = document.createElement('canvas');
+    var max = 400;
+    var w = img.width, h = img.height;
+    if (w > h) { if (w > max) { h = h * max / w; w = max; } }
+    else { if (h > max) { w = w * max / h; h = max; } }
+    canvas.width = w; canvas.height = h;
+    canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+    callback(canvas.toDataURL('image/jpeg', 0.72));
+  };
+  img.src = base64;
+}
+
+function removerFoto(event, idx) {
+  event.stopPropagation();
+  fotosTemp[idx] = null;
+  renderFotosGrid();
+}
+
+function resetFotos() {
+  fotosTemp = [null,null,null,null,null];
+  renderFotosGrid();
+}
+
+function abrirLightbox(src) {
+  document.getElementById('lightbox-img').src = src;
+  document.getElementById('lightbox').classList.add('open');
+}
+function fecharLightbox() {
+  document.getElementById('lightbox').classList.remove('open');
+}
+document.getElementById('lightbox').addEventListener('click', function(e) {
+  if (e.target === this) fecharLightbox();
+});
+
+// ===== ALERTAS =====
 function renderAlertasTopo() {
   var h = hoje0(), a = amanha0();
-  var nHoje  = clientes.filter(function(c){ return !c.pago && +parseData(c.vencimento)===+h; });
-  var nAmanha= clientes.filter(function(c){ return !c.pago && +parseData(c.vencimento)===+a; });
-  var total  = nHoje.length + nAmanha.length;
+  var nHoje   = clientes.filter(function(c){ return !c.pago && +parseData(c.vencimento)===+h; });
+  var nAmanha = clientes.filter(function(c){ return !c.pago && +parseData(c.vencimento)===+a; });
+  var total   = nHoje.length + nAmanha.length;
   var bc = document.getElementById('bell-count');
-  if (total > 0) { bc.style.display='inline-flex'; bc.textContent=total; }
-  else { bc.style.display='none'; }
-
+  if (bc) {
+    if (total > 0) { bc.style.display='inline-flex'; bc.textContent=total; }
+    else { bc.style.display='none'; }
+  }
   var pa = document.getElementById('painel-alertas');
   var html = '';
   if (!nHoje.length && !nAmanha.length) {
-    if (clientes.length > 0) html = '<div class="alerta-ok">&#9989; Nenhum vencimento hoje ou amanhã.</div>';
+    if (clientes.length > 0) html = '<div class="alerta-ok">✅ Nenhum vencimento hoje ou amanhã.</div>';
     pa.innerHTML = html; return;
   }
   if (nHoje.length) {
-    html += '<div class="alerta-hoje"><div class="alerta-title">&#9201; Vencimento HOJE - ' + nHoje.length + ' cliente(s)</div>';
+    html += '<div class="alerta-hoje"><div class="alerta-title">⏱ Vencimento HOJE - ' + nHoje.length + ' cliente(s)</div>';
     nHoje.forEach(function(c){ html += '<div class="alerta-item"><strong>' + c.nome + '</strong><span>' + fmtR(c.valor) + '</span></div>'; });
     html += '</div>';
   }
   if (nAmanha.length) {
-    html += '<div class="alerta-amanha"><div class="alerta-title">&#128276; Vencimento AMANHÃ - ' + nAmanha.length + ' cliente(s)</div>';
+    html += '<div class="alerta-amanha"><div class="alerta-title">🔔 Vencimento AMANHÃ - ' + nAmanha.length + ' cliente(s)</div>';
     nAmanha.forEach(function(c){ html += '<div class="alerta-item"><strong>' + c.nome + '</strong><span>' + fmtR(c.valor) + '</span></div>'; });
     html += '</div>';
   }
@@ -662,8 +1147,8 @@ function salvarForm() {
   var nome  = document.getElementById('f-nome').value.trim();
   var valor = parseFloat(document.getElementById('f-valor').value);
   var taxa  = parseFloat(document.getElementById('f-taxa').value);
-  if (!nome)             { toast('Informe o nome do cliente'); return; }
-  if (!valor||valor<=0)  { toast('Informe um valor válido'); return; }
+  if (!nome)            { toast('Informe o nome do cliente'); return; }
+  if (!valor||valor<=0) { toast('Informe um valor válido'); return; }
   if (isNaN(taxa)||taxa<0||taxa>99) { toast('Taxa deve ser entre 0 e 99'); return; }
 
   var obj = {
@@ -678,7 +1163,8 @@ function salvarForm() {
     dataEmprestimo: document.getElementById('f-data').value,
     vencimento: document.getElementById('f-venc').value,
     obs: document.getElementById('f-obs').value,
-    recorrente: document.getElementById('f-recorrente').checked,
+    recorrente: recorrenteAtivo,
+    fotos: fotosTemp.slice(),
     pago: editIdx >= 0 ? clientes[editIdx].pago : false,
     historico: editIdx >= 0 ? (clientes[editIdx].historico || []) : []
   };
@@ -698,8 +1184,10 @@ function salvarForm() {
   salvar(); renderAlertasTopo();
   ['f-nome','f-tel','f-cpf','f-valor','f-obs'].forEach(function(id){ document.getElementById(id).value=''; });
   document.getElementById('f-taxa').value = '';
-  document.getElementById('f-recorrente').checked = false;
+  recorrenteAtivo = false;
+  atualizarToggleRecorrente();
   document.getElementById('f-periodo').value = 'semanal';
+  resetFotos();
   initDatas();
 }
 
@@ -716,11 +1204,15 @@ function editarCliente(idx) {
   document.getElementById('f-data').value  = c.dataDebito || c.dataEmprestimo || '';
   document.getElementById('f-venc').value  = c.vencimento || '';
   document.getElementById('f-obs').value   = c.obs  || '';
-  document.getElementById('f-recorrente').checked = !!c.recorrente;
+  recorrenteAtivo = !!c.recorrente;
+  atualizarToggleRecorrente();
+  fotosTemp = (c.fotos && Array.isArray(c.fotos)) ? c.fotos.slice() : [null,null,null,null,null];
+  while (fotosTemp.length < 5) fotosTemp.push(null);
+  renderFotosGrid();
 
   document.getElementById('edit-banner').classList.add('show');
   document.getElementById('btn-cancelar-edit').style.display = 'flex';
-  document.getElementById('btn-salvar').innerHTML = '&#10003; Salvar alterações';
+  document.getElementById('btn-salvar').innerHTML = '✓ Salvar alterações';
 
   fecharModal();
   showTab('novo');
@@ -731,14 +1223,17 @@ function cancelarEdicao() {
   editIdx = -1;
   document.getElementById('edit-banner').classList.remove('show');
   document.getElementById('btn-cancelar-edit').style.display = 'none';
-  document.getElementById('btn-salvar').innerHTML = '&#128190; Salvar cliente';
+  document.getElementById('btn-salvar').innerHTML = '💾 Salvar cliente';
   ['f-nome','f-tel','f-cpf','f-valor','f-obs'].forEach(function(id){ document.getElementById(id).value=''; });
   document.getElementById('f-taxa').value = '';
-  document.getElementById('f-recorrente').checked = false;
+  recorrenteAtivo = false;
+  atualizarToggleRecorrente();
   document.getElementById('f-periodo').value = 'semanal';
+  resetFotos();
   initDatas();
 }
 
+// ===== FILTROS / LISTA =====
 function filtrar(tipo, btn) {
   filtroAtivo = tipo;
   document.querySelectorAll('.fbtn').forEach(function(b){ b.classList.remove('active'); });
@@ -763,7 +1258,7 @@ function renderClientes() {
   }).sort(function(a,b){ return (ord[vencStatus(a)]||9)-(ord[vencStatus(b)]||9); });
 
   if (!filtrados.length) {
-    lista.innerHTML='<div class="empty"><span class="empty-icon">&#128101;</span>Nenhum cliente nesta categoria</div>'; return;
+    lista.innerHTML='<div class="empty"><span class="empty-icon">👤</span>Nenhum cliente nesta categoria</div>'; return;
   }
 
   var html = '';
@@ -772,10 +1267,11 @@ function renderClientes() {
     var s   = vencStatus(c);
     var extraCard = s==='hoje'?'urgente-hoje': s==='amanha'?'urgente-amanha': s==='vencido'?'vencido':'';
     var avClass   = s==='hoje'?'av-hoje': s==='amanha'?'av-amanha':'';
+    var fotoAvatar = c.fotos && c.fotos[0] ? '<img src="'+c.fotos[0]+'" alt="">' : initiais(c.nome);
     html += '<div class="cliente-card ' + extraCard + '">';
     html += '<div class="cli-header">';
-    html += '<div class="avatar ' + avClass + '">' + initiais(c.nome) + '</div>';
-    html += '<div style="flex:1"><div class="cli-nome">' + c.nome + (c.recorrente ? '<span class="badge-recorrente">&#128260; Recorrente</span>' : '') + '</div>';
+    html += '<div class="avatar ' + (c.fotos && c.fotos[0] ? '' : avClass) + '">' + fotoAvatar + '</div>';
+    html += '<div style="flex:1"><div class="cli-nome">' + c.nome + (c.recorrente ? '<span class="badge-recorrente">🔄 Recorrente</span>' : '') + '</div>';
     if (c.tel) html += '<div class="cli-tel">' + c.tel + '</div>';
     html += '</div>' + badgeHtml(s) + '</div>';
     html += '<div class="cli-info">';
@@ -786,16 +1282,17 @@ function renderClientes() {
     html += '<div><div class="ci-label">Vencimento</div><div class="ci-val" style="' + vcor + '">' + fmtData(c.vencimento) + '</div></div>';
     html += '</div>';
     html += '<div class="cli-acoes">';
-    html += '<button class="btn-ver" onclick="abrirModal(' + idx + ')">&#128065; Detalhes</button>';
-    html += '<button class="btn-edit" onclick="editarCliente(' + idx + ')">&#9998; Editar</button>';
-    if (!c.pago) html += '<button class="btn-juros-pago" onclick="jurosPago(' + idx + ')">&#128176; Juros Pago</button>';
-    if (!c.pago) html += '<button class="btn-pago" onclick="marcarPagoIdx(' + idx + ')">&#10003; Pago</button>';
-    html += '<button class="btn-del" onclick="excluir(' + idx + ')">&#128465;</button>';
+    html += '<button class="btn-ver" onclick="abrirModal(' + idx + ')">👁 Detalhes</button>';
+    html += '<button class="btn-edit" onclick="editarCliente(' + idx + ')">✏️ Editar</button>';
+    if (!c.pago) html += '<button class="btn-juros-pago" onclick="jurosPago(' + idx + ')">💰 Juros Pago</button>';
+    if (!c.pago) html += '<button class="btn-pago" onclick="marcarPagoIdx(' + idx + ')">✓ Pago</button>';
+    html += '<button class="btn-del" onclick="excluir(' + idx + ')">🗑</button>';
     html += '</div></div>';
   });
   lista.innerHTML = html;
 }
 
+// ===== MODAL DETALHES =====
 function abrirModal(idx) {
   modalIdx = idx;
   var c = clientes[idx];
@@ -804,8 +1301,7 @@ function abrirModal(idx) {
   document.getElementById('modal-btn-pagar').style.display = c.pago ? 'none' : '';
   document.getElementById('modal-btn-juros').style.display = (c.pago || !c.recorrente) ? 'none' : '';
 
-  var agora = new Date();
-  agora.setHours(0,0,0,0);
+  var agora = new Date(); agora.setHours(0,0,0,0);
   var dataInicio = c.dataDebito || c.dataEmprestimo;
   var dataInicioObj = dataInicio ? new Date(dataInicio+'T00:00:00') : agora;
   dataInicioObj.setHours(0,0,0,0);
@@ -813,37 +1309,43 @@ function abrirModal(idx) {
   var diasDecorridos = Math.max(0, Math.floor((agora - dataInicioObj) / 86400000));
   var pd = {dia:1, semanal:7, quinzenal:15, mensal:30};
   var qtd = Math.max(1, Math.ceil(diasDecorridos / (pd[c.periodo]||30)));
-  // Se 0 dias (mesmo dia do débito), mostra 1 período para situação atual
-  if (qtd < 1) qtd = 1;
   var r = calcJuros(c.valor, c.taxa, qtd);
-
-  // Cálculo antecipado (juros exatos proporcionais por dias, mínimo 1 dia)
   var rAntecipado = calcJurosDias(c.valor, c.taxa, c.periodo, diasDecorridos);
 
   var venc = parseData(c.vencimento);
 
   var html = '';
-  if (s==='hoje')   html += '<div class="modal-alerta-hoje">&#9201; Vencimento é HOJE! Entre em contato.</div>';
-  if (s==='amanha') html += '<div class="modal-alerta-amanha">&#128276; Vence amanhã! Avise o cliente.</div>';
+  if (s==='hoje')   html += '<div class="modal-alerta-hoje">⏱ Vencimento é HOJE! Entre em contato.</div>';
+  if (s==='amanha') html += '<div class="modal-alerta-amanha">🔔 Vence amanhã! Avise o cliente.</div>';
 
-  // Situação atual (posição conforme períodos fechados)
-  html += '<div class="calc-box">';
+  // Fotos do cliente no modal
+  var fotosCliente = c.fotos ? c.fotos.filter(function(f){ return !!f; }) : [];
+  if (fotosCliente.length) {
+    html += '<div class="modal-section-title">📷 Fotos do cliente</div>';
+    html += '<div class="modal-fotos-grid">';
+    fotosCliente.forEach(function(f, i) {
+      html += '<img class="modal-foto-thumb" src="' + f + '" onclick="abrirLightbox(\'' + f + '\')" alt="Foto ' + (i+1) + '">';
+    });
+    html += '</div>';
+  }
+
+  html += '<div class="calc-box" style="margin-top:14px">';
   html += '<div class="calc-box-title">📊 Situação Atual — ' + qtd + ' período(s) (' + diasDecorridos + ' dias)</div>';
   html += '<div class="calc-row"><span class="ck">Principal</span><span class="cv">' + fmtR(c.valor) + '</span></div>';
-  html += '<div class="calc-row"><span class="ck">Taxa ' + c.taxa + '% / ' + periodoLabel(c.periodo) + '</span><span class="cv">Juros compostos</span></div>';
+  html += '<div class="calc-row"><span class="ck">Taxa</span><span class="cv">' + c.taxa + '% / ' + periodoLabel(c.periodo) + '</span></div>';
+  html += '<div class="calc-row"><span class="ck">Tipo de juros</span><span class="cv">Compostos</span></div>';
+  html += '<div class="calc-row"><span class="ck">Período(s)</span><span class="cv">' + qtd + ' ' + periodoLabel(c.periodo).toLowerCase() + '(s)</span></div>';
   html += '<div class="calc-row"><span class="ck">Data do débito</span><span class="cv">' + fmtData(dataInicio) + '</span></div>';
   html += '<div class="calc-row"><span class="ck">Vencimento</span><span class="cv">' + fmtData(c.vencimento) + '</span></div>';
   html += '<div class="calc-row"><span class="ck">Total de juros</span><span class="cv">' + fmtR(r.juros) + '</span></div>';
   html += '<div class="calc-row total"><span class="ck">Total a pagar</span><span class="cv">' + fmtR(r.total) + '</span></div>';
   html += '</div>';
 
-  // Pagamento antecipado — sempre exibe se débito não foi pago (vencido ou futuro)
   if (!c.pago) {
     var diasAteVenc = venc ? Math.max(0, Math.floor((venc - agora) / 86400000)) : 0;
     var totalDias = diasDecorridos + diasAteVenc;
     var diasPeriodo = {dia:1, semanal:7, quinzenal:15, mensal:30}[c.periodo] || 30;
     var labelPeriodo = periodoLabel(c.periodo).toLowerCase();
-    // Expoente fracionário: dias decorridos (mín 1) / dias do período
     var diasEfetivos = rAntecipado.diasEfetivos;
     var fracaoStr = diasEfetivos + ' dia(s) / ' + diasPeriodo + ' dias (' + labelPeriodo + ') = ' + rAntecipado.qtdPeriodos.toFixed(4) + ' período(s)';
 
@@ -864,17 +1366,16 @@ function abrirModal(idx) {
   if (c.cpf) html += '<p style="font-size:13px;color:var(--texto2);margin-top:12px">CPF: ' + c.cpf + '</p>';
   if (c.tel) html += '<p style="font-size:13px;color:var(--texto2);margin-top:5px">Tel: ' + c.tel + '</p>';
   if (c.obs) html += '<p style="font-size:13px;color:var(--texto2);margin-top:5px">Obs: ' + c.obs + '</p>';
-  html += '<p style="margin-top:12px">' + badgeHtml(s) + (c.recorrente ? '&nbsp;<span class="badge-recorrente">&#128260; Recorrente</span>' : '') + '</p>';
+  html += '<p style="margin-top:12px">' + badgeHtml(s) + (c.recorrente ? '&nbsp;<span class="badge-recorrente">🔄 Recorrente</span>' : '') + '</p>';
 
-  // Histórico de juros pagos
   if (c.historico && c.historico.length) {
-    html += '<div class="modal-section-title" style="margin-top:16px">&#128203; Histórico de pagamentos</div>';
+    html += '<div class="modal-section-title" style="margin-top:16px">📋 Histórico de pagamentos</div>';
     html += '<div style="background:var(--cinza);border-radius:var(--radius-sm);padding:10px 12px;">';
     var hist = [].concat(c.historico).reverse();
     hist.forEach(function(h) {
       if (h.tipo === 'juros_pago') {
         html += '<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--cinza2);font-size:13px">';
-        html += '<div><strong style="color:#8B5E00">&#128176; Juros pago</strong><div style="font-size:11px;color:var(--texto2)">' + fmtData(h.data) + ' — venc. anterior: ' + fmtData(h.vencimentoAnterior) + '</div></div>';
+        html += '<div><strong style="color:#8B5E00">💰 Juros pago</strong><div style="font-size:11px;color:var(--texto2)">' + fmtData(h.data) + ' — venc. anterior: ' + fmtData(h.vencimentoAnterior) + '</div></div>';
         html += '<span style="font-weight:700;color:#8B5E00">' + fmtR(h.valorJuros) + '</span>';
         html += '</div>';
       }
@@ -893,10 +1394,7 @@ function pagarHoje(idx, valorTotal) {
   clientes[idx].pago = true;
   clientes[idx].valorPago = valorTotal;
   clientes[idx].dataPagamento = new Date().toISOString().split('T')[0];
-  salvar();
-  fecharModal();
-  renderAlertasTopo();
-  renderClientes();
+  salvar(); fecharModal(); renderAlertasTopo(); renderClientes();
   toast('Pagamento de ' + fmtR(valorTotal) + ' registrado!');
 }
 
@@ -928,7 +1426,6 @@ function jurosPago(idx) {
   var msg = 'Registrar pagamento dos juros de ' + fmtR(jurosValor) + ' para ' + c.nome + '?\n\nO débito principal (' + fmtR(c.valor) + ') será mantido.\nAs datas serão atualizadas para o próximo período.';
   if (!confirm(msg)) return;
 
-  // Registrar no histórico
   var dataHoje = agora.toISOString().split('T')[0];
   if (!c.historico) c.historico = [];
   c.historico.push({
@@ -939,15 +1436,12 @@ function jurosPago(idx) {
     vencimentoAnterior: c.vencimento
   });
 
-  // Avançar data do débito e vencimento para o próximo período
   var diasPeriodo = diasDoPeriodo(c.periodo);
   c.dataDebito = dataHoje;
   c.dataEmprestimo = dataHoje;
   c.vencimento = somarDias(dataHoje, diasPeriodo);
 
-  salvar();
-  renderAlertasTopo();
-  renderClientes();
+  salvar(); renderAlertasTopo(); renderClientes();
   toast('Juros de ' + fmtR(jurosValor) + ' registrados! Próximo venc.: ' + fmtData(c.vencimento));
 }
 
@@ -958,14 +1452,252 @@ function excluir(idx) {
   toast('Cliente removido.');
 }
 
-// ===== GERADOR DE PDF =====
+// ===== CALCULAR =====
+function calcular() {
+  var v    = parseFloat(document.getElementById('c-valor').value);
+  var taxa = parseFloat(document.getElementById('c-taxa').value);
+  var per  = document.getElementById('c-periodo').value;
+  var qtd  = parseInt(document.getElementById('c-qtd').value) || 1;
+  var div  = document.getElementById('calc-result');
+  if (!v || v <= 0) { div.style.display='none'; return; }
+  var r = calcJuros(v, taxa, qtd);
+  var labels = {dia:'dias', semanal:'semanas', quinzenal:'quinzenas', mensal:'meses'};
+
+  // Resultado: taxa indicada → período → juros compostos
+  var html = '<div class="calc-box">';
+  html += '<div class="calc-box-title">📋 Resultado da simulação</div>';
+  html += '<div class="calc-row"><span class="ck">Principal</span><span class="cv">' + fmtR(v) + '</span></div>';
+  html += '<div class="calc-row"><span class="ck">Taxa indicada</span><span class="cv">' + taxa + '% / ' + periodoLabel(per) + '</span></div>';
+  html += '<div class="calc-row"><span class="ck">Período</span><span class="cv">' + qtd + ' ' + labels[per] + '</span></div>';
+  html += '<div class="calc-row"><span class="ck">Tipo de juros</span><span class="cv">Juros compostos</span></div>';
+  html += '<div class="calc-row"><span class="ck">Total de juros</span><span class="cv">' + fmtR(r.juros) + '</span></div>';
+  html += '<div class="calc-row total"><span class="ck">Total a pagar</span><span class="cv">' + fmtR(r.total) + '</span></div>';
+  html += '</div>';
+
+  // Botão WhatsApp
+  html += '<button class="btn-whatsapp" onclick="enviarWhatsApp(' + v + ',' + taxa + ',\'' + per + '\',' + qtd + ',' + r.juros + ',' + r.total + ')">📲 Enviar resultado pelo WhatsApp</button>';
+
+  div.innerHTML = html;
+  div.style.display = 'block';
+}
+
+function enviarWhatsApp(principal, taxa, periodo, qtd, juros, total) {
+  var labels = {dia:'dias', semanal:'semanas', quinzenal:'quinzenas', mensal:'meses'};
+  var periodoNome = periodoLabel(periodo);
+  var unidade = labels[periodo];
+
+  var msg =
+    '💰 *Simulação de Débito — Gestão de Débitos*\n\n' +
+    '📌 *Principal:* ' + fmtR(principal) + '\n' +
+    '📈 *Taxa:* ' + taxa + '% / ' + periodoNome + '\n' +
+    '📅 *Período:* ' + qtd + ' ' + unidade + '\n' +
+    '🔢 *Tipo de juros:* Compostos\n\n' +
+    '💸 *Total de juros:* ' + fmtR(juros) + '\n' +
+    '✅ *Total a pagar:* *' + fmtR(total) + '*\n\n' +
+    '_Calculado com Gestão de Débitos_';
+
+  var tel = prompt('Número do WhatsApp (com DDD, somente números):', '');
+  if (tel === null) return; // cancelou
+
+  tel = tel.replace(/\D/g,'');
+  if (!tel) {
+    // Sem número — abre WhatsApp genérico para compartilhar
+    window.open('https://wa.me/?text=' + encodeURIComponent(msg), '_blank');
+  } else {
+    // Com número — abre conversa direta
+    window.open('https://wa.me/55' + tel + '?text=' + encodeURIComponent(msg), '_blank');
+  }
+}
+
+// ===== RESUMO / FLUXO DE CAIXA =====
+function setFluxoPeriodo(p, btn) {
+  FLUXO_PERIODO = p;
+  document.querySelectorAll('.pbtn').forEach(function(b){ b.classList.remove('active'); });
+  btn.classList.add('active');
+  renderFluxoCaixa();
+}
+
+function getFiltroDataRange() {
+  var agora = new Date();
+  var inicio, fim;
+  if (FLUXO_PERIODO === 'mes') {
+    inicio = new Date(agora.getFullYear(), agora.getMonth(), 1);
+    fim    = new Date(agora.getFullYear(), agora.getMonth()+1, 0);
+  } else if (FLUXO_PERIODO === 'semestre') {
+    var sem = agora.getMonth() < 6 ? 0 : 6;
+    inicio = new Date(agora.getFullYear(), sem, 1);
+    fim    = new Date(agora.getFullYear(), sem+6, 0);
+  } else { // ano
+    inicio = new Date(agora.getFullYear(), 0, 1);
+    fim    = new Date(agora.getFullYear(), 11, 31);
+  }
+  inicio.setHours(0,0,0,0);
+  fim.setHours(23,59,59,999);
+  return { inicio: inicio, fim: fim };
+}
+
+function renderFluxoCaixa() {
+  var range = getFiltroDataRange();
+  var meses = ['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
+  var periodoStr = '';
+  if (FLUXO_PERIODO === 'mes') {
+    periodoStr = 'Este mês (' + meses[range.inicio.getMonth()] + '/' + range.inicio.getFullYear() + ')';
+  } else if (FLUXO_PERIODO === 'semestre') {
+    var semNum = range.inicio.getMonth() < 6 ? '1º' : '2º';
+    periodoStr = semNum + ' semestre de ' + range.inicio.getFullYear();
+  } else {
+    periodoStr = 'Ano de ' + range.inicio.getFullYear();
+  }
+
+  // Dinheiro em débito: clientes NÃO pagos, cujo vencimento está no período
+  var emDebito = clientes.filter(function(c) {
+    if (c.pago) return false;
+    var venc = parseData(c.vencimento);
+    if (!venc) return false;
+    return venc >= range.inicio && venc <= range.fim;
+  });
+  var totalDebito = emDebito.reduce(function(acc, c) {
+    var agora = new Date(); agora.setHours(0,0,0,0);
+    var dataInicio = c.dataDebito || c.dataEmprestimo;
+    var dataInicioObj = dataInicio ? new Date(dataInicio+'T00:00:00') : agora;
+    dataInicioObj.setHours(0,0,0,0);
+    var dias = Math.max(0, Math.floor((agora - dataInicioObj) / 86400000));
+    var pd = {dia:1, semanal:7, quinzenal:15, mensal:30};
+    var qtd = Math.max(1, Math.ceil(dias/(pd[c.periodo]||30)));
+    return acc + calcJuros(c.valor, c.taxa, qtd).total;
+  }, 0);
+
+  // Dinheiro recebido: clientes PAGOS no período
+  var pagosNoPeriodo = clientes.filter(function(c) {
+    if (!c.pago) return false;
+    var dp = c.dataPagamento ? parseData(c.dataPagamento) : null;
+    if (!dp) return false;
+    return dp >= range.inicio && dp <= range.fim;
+  });
+  var totalRecebido = pagosNoPeriodo.reduce(function(acc, c) {
+    return acc + (c.valorPago || c.valor || 0);
+  }, 0);
+
+  // Saldo = recebido - débito pendente (do período)
+  var saldo = totalRecebido - totalDebito;
+
+  document.getElementById('fc-debito-val').textContent = fmtR(totalDebito);
+  document.getElementById('fc-debito-qtd').textContent = emDebito.length + ' cliente(s) em aberto';
+  document.getElementById('fc-recebido-val').textContent = fmtR(totalRecebido);
+  document.getElementById('fc-recebido-qtd').textContent = pagosNoPeriodo.length + ' pagamento(s)';
+  document.getElementById('fc-saldo-val').textContent = fmtR(saldo);
+  var saldoEl = document.getElementById('fc-saldo-val');
+  saldoEl.style.color = saldo >= 0 ? '#185FA5' : '#A32D2D';
+  document.getElementById('fc-saldo-periodo').textContent = 'Período: ' + periodoStr;
+}
+
+function renderResumo() {
+  var total    = clientes.length;
+  var ativos   = clientes.filter(function(c){ return !c.pago; }).length;
+  var vencidos = clientes.filter(function(c){ return vencStatus(c)==='vencido'; }).length;
+  var urgente  = clientes.filter(function(c){ var s=vencStatus(c); return s==='hoje'||s==='amanha'; }).length;
+
+  document.getElementById('stats-row').innerHTML =
+    '<div class="stat"><div class="stat-val">' + total + '</div><div class="stat-lbl">Clientes</div></div>' +
+    '<div class="stat"><div class="stat-val">' + ativos + '</div><div class="stat-lbl">Em aberto</div></div>' +
+    '<div class="stat"><div class="stat-val" style="color:' + (vencidos?'var(--vermelho)':'inherit') + '">' + vencidos + '</div><div class="stat-lbl">Vencidos</div></div>' +
+    '<div class="stat"><div class="stat-val" style="color:' + (urgente?'#854F0B':'inherit') + '">' + urgente + '</div><div class="stat-lbl">Urgentes</div></div>';
+
+  renderFluxoCaixa();
+  renderGrafico();
+
+  var lista = '';
+  if (!clientes.length) {
+    lista = '<div class="empty"><span class="empty-icon">📊</span>Sem dados ainda</div>';
+  } else {
+    var sorted = [].concat(clientes).sort(function(a,b){
+      var ord={hoje:0,amanha:1,vencido:2,em_dia:3,pago:4};
+      return (ord[vencStatus(a)]||9)-(ord[vencStatus(b)]||9);
+    });
+    lista += '<div class="card">';
+    lista += '<p class="card-title">Todos os débitos</p>';
+    sorted.forEach(function(c){
+      var s = vencStatus(c);
+      lista += '<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--cinza2)">';
+      lista += '<div><div style="font-size:14px;font-weight:600">' + c.nome + '</div>';
+      lista += '<div style="font-size:12px;color:var(--texto2)">' + periodoLabel(c.periodo) + ' - ' + c.taxa + '% - venc. ' + fmtData(c.vencimento) + '</div></div>';
+      lista += '<div style="text-align:right"><div style="font-size:14px;font-weight:700">' + fmtR(c.valor) + '</div>' + badgeHtml(s) + '</div>';
+      lista += '</div>';
+    });
+    lista += '</div>';
+  }
+  document.getElementById('resumo-lista').innerHTML = lista;
+}
+
+function renderGrafico() {
+  var div = document.getElementById('chart-debitos');
+  if (!div) return;
+  var ativos = clientes.filter(function(c){ return !c.pago; });
+  if (!ativos.length) { div.innerHTML = '<div class="chart-empty">Nenhum débito em aberto</div>'; return; }
+  var sorted = [].concat(ativos).sort(function(a,b){ return b.valor - a.valor; }).slice(0, 8);
+  var maxVal = sorted[0].valor;
+  var cores = ['#185FA5','#E24B4A','#EF9F27','#1D9E75','#7B2D8B','#0891B2','#D97706','#64748B'];
+  var html = '';
+  sorted.forEach(function(c, i){
+    var agora = new Date(); agora.setHours(0,0,0,0);
+    var dataInicio = c.dataDebito || c.dataEmprestimo;
+    var dataInicioObj = dataInicio ? new Date(dataInicio+'T00:00:00') : agora;
+    dataInicioObj.setHours(0,0,0,0);
+    var dias = Math.max(0, Math.floor((agora - dataInicioObj) / 86400000));
+    var pd = {dia:1,semanal:7,quinzenal:15,mensal:30};
+    var qtd = Math.max(1, Math.ceil(dias/(pd[c.periodo]||30)));
+    var r = calcJuros(c.valor, c.taxa, qtd);
+    var pct = Math.max(8, Math.round((r.total / (maxVal * Math.pow(1 + (sorted[0].taxa||5)/100, Math.max(1, Math.ceil(dias/(pd[sorted[0].periodo]||30)))))) * 100));
+    pct = Math.min(pct, 100);
+    var cor = cores[i % cores.length];
+    html += '<div class="chart-bar-row">';
+    html += '<div class="chart-label" title="' + c.nome + '">' + c.nome.split(' ')[0] + '</div>';
+    html += '<div class="chart-bar-bg"><div class="chart-bar-fill" style="width:' + pct + '%;background:' + cor + '"><span class="chart-bar-val">' + fmtR(r.total) + '</span></div></div>';
+    html += '</div>';
+  });
+  div.innerHTML = html;
+}
+
+// ===== BACKUP =====
+function exportarBackup() {
+  if (!clientes.length) { toast('Nenhum dado para exportar.'); return; }
+  var json = JSON.stringify({ versao: 1, data: new Date().toISOString(), clientes: clientes }, null, 2);
+  var blob = new Blob([json], { type: 'application/json' });
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  var hoje = new Date();
+  var nome = 'backup_debitos_' + hoje.getFullYear() + '-' + String(hoje.getMonth()+1).padStart(2,'0') + '-' + String(hoje.getDate()).padStart(2,'0') + '.json';
+  a.href = url; a.download = nome; a.click();
+  URL.revokeObjectURL(url);
+  toast('Backup exportado com sucesso!');
+}
+
+function importarBackup(event) {
+  var file = event.target.files[0];
+  if (!file) return;
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      var dados = JSON.parse(e.target.result);
+      var lista = dados.clientes || dados;
+      if (!Array.isArray(lista)) throw new Error('Formato inválido');
+      if (!confirm('Restaurar ' + lista.length + ' cliente(s)? Os dados atuais serão substituídos.')) return;
+      clientes = lista;
+      salvar(); renderAlertasTopo(); renderResumo();
+      toast('Backup restaurado com sucesso!');
+    } catch(err) { toast('Arquivo inválido ou corrompido.'); }
+  };
+  reader.readAsText(file);
+  event.target.value = '';
+}
+
+// ===== PDF =====
 function gerarPDF() {
   if (modalIdx < 0) return;
   var c = clientes[modalIdx];
   var s = vencStatus(c);
 
-  var agora = new Date();
-  agora.setHours(0,0,0,0);
+  var agora = new Date(); agora.setHours(0,0,0,0);
   var dataInicio = c.dataDebito || c.dataEmprestimo;
   var dataInicioObj = dataInicio ? new Date(dataInicio+'T00:00:00') : agora;
   dataInicioObj.setHours(0,0,0,0);
@@ -1018,7 +1750,6 @@ function gerarPDF() {
     td:last-child { text-align: right; font-weight: 600; }
     .total-row td { font-size: 15px; font-weight: 700; color: #042C53; border-top: 2px solid rgba(24,95,165,0.3); padding-top: 10px; }
     .total-row td:last-child { font-size: 18px; }
-    .badge-status { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 700; }
     .footer-pdf { margin-top: 30px; text-align: center; font-size: 11px; color: #999; border-top: 1px solid #ddd; padding-top: 16px; }
     @media print { body { padding: 10px; } }
   </style></head>
@@ -1037,7 +1768,8 @@ function gerarPDF() {
       <div class="section-title">📊 Situação Atual — ${qtd} período(s) (${diasDecorridos} dias)</div>
       <table>
         <tr><td style="color:#1a4a7a;">Principal</td><td>${fmtR(c.valor)}</td></tr>
-        <tr><td style="color:#1a4a7a;">Taxa de juros</td><td>${c.taxa}% / ${periodoLabel(c.periodo)}</td></tr>
+        <tr><td style="color:#1a4a7a;">Taxa indicada</td><td>${c.taxa}% / ${periodoLabel(c.periodo)}</td></tr>
+        <tr><td style="color:#1a4a7a;">Período</td><td>${qtd} ${periodoLabel(c.periodo).toLowerCase()}(s)</td></tr>
         <tr><td style="color:#1a4a7a;">Tipo de juros</td><td>Compostos</td></tr>
         <tr><td style="color:#1a4a7a;">Data do débito</td><td>${fmtData(dataInicio)}</td></tr>
         <tr><td style="color:#1a4a7a;">Vencimento</td><td>${fmtData(c.vencimento)}</td></tr>
@@ -1060,135 +1792,14 @@ function gerarPDF() {
   toast('Extrato gerado! Abra o arquivo e imprima como PDF.');
 }
 
-function calcular() {
-  var v    = parseFloat(document.getElementById('c-valor').value);
-  var taxa = parseFloat(document.getElementById('c-taxa').value);
-  var per  = document.getElementById('c-periodo').value;
-  var qtd  = parseInt(document.getElementById('c-qtd').value) || 1;
-  var div  = document.getElementById('calc-result');
-  if (!v || v <= 0) { div.style.display='none'; return; }
-  var r = calcJuros(v, taxa, qtd);
-  var labels = {dia:'dias', semanal:'semanas', quinzenal:'quinzenas', mensal:'meses'};
-  var html = '<div class="calc-box">';
-  html += '<div class="calc-box-title">Resultado da simulação</div>';
-  html += '<div class="calc-row"><span class="ck">Principal</span><span class="cv">' + fmtR(v) + '</span></div>';
-  html += '<div class="calc-row"><span class="ck">Taxa ' + taxa + '% / ' + periodoLabel(per) + '</span><span class="cv">Juros compostos</span></div>';
-  html += '<div class="calc-row"><span class="ck">Período</span><span class="cv">' + qtd + ' ' + labels[per] + '</span></div>';
-  html += '<div class="calc-row"><span class="ck">Total de juros</span><span class="cv">' + fmtR(r.juros) + '</span></div>';
-  html += '<div class="calc-row total"><span class="ck">Total a pagar</span><span class="cv">' + fmtR(r.total) + '</span></div>';
-  html += '</div>';
-  div.innerHTML = html; div.style.display = 'block';
-}
-
-function renderResumo() {
-  var total    = clientes.length;
-  var ativos   = clientes.filter(function(c){ return !c.pago; }).length;
-  var vencidos = clientes.filter(function(c){ return vencStatus(c)==='vencido'; }).length;
-  var urgente  = clientes.filter(function(c){ var s=vencStatus(c); return s==='hoje'||s==='amanha'; }).length;
-
-  document.getElementById('stats-row').innerHTML =
-    '<div class="stat"><div class="stat-val">' + total + '</div><div class="stat-lbl">Clientes</div></div>' +
-    '<div class="stat"><div class="stat-val">' + ativos + '</div><div class="stat-lbl">Em aberto</div></div>' +
-    '<div class="stat"><div class="stat-val" style="color:' + (vencidos?'var(--vermelho)':'inherit') + '">' + vencidos + '</div><div class="stat-lbl">Vencidos</div></div>' +
-    '<div class="stat"><div class="stat-val" style="color:' + (urgente?'#854F0B':'inherit') + '">' + urgente + '</div><div class="stat-lbl">Urgentes</div></div>';
-
-  renderGrafico();
-
-  var lista = '';
-  if (!clientes.length) {
-    lista = '<div class="empty"><span class="empty-icon">&#128202;</span>Sem dados ainda</div>';
-  } else {
-    var sorted = [].concat(clientes).sort(function(a,b){
-      var ord={hoje:0,amanha:1,vencido:2,em_dia:3,pago:4};
-      return (ord[vencStatus(a)]||9)-(ord[vencStatus(b)]||9);
-    });
-    lista += '<div class="card">';
-    lista += '<p class="card-title">Todos os débitos</p>';
-    sorted.forEach(function(c){
-      var s = vencStatus(c);
-      lista += '<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--cinza2)">';
-      lista += '<div><div style="font-size:14px;font-weight:600">' + c.nome + '</div>';
-      lista += '<div style="font-size:12px;color:var(--texto2)">' + periodoLabel(c.periodo) + ' - ' + c.taxa + '% - venc. ' + fmtData(c.vencimento) + '</div></div>';
-      lista += '<div style="text-align:right"><div style="font-size:14px;font-weight:700">' + fmtR(c.valor) + '</div>' + badgeHtml(s) + '</div>';
-      lista += '</div>';
-    });
-    lista += '</div>';
-  }
-  document.getElementById('resumo-lista').innerHTML = lista;
-}
-
-function renderGrafico() {
-  var div = document.getElementById('chart-debitos');
-  if (!div) return;
-  var ativos = clientes.filter(function(c){ return !c.pago; });
-  if (!ativos.length) { div.innerHTML = '<div class="chart-empty">Nenhum débito em aberto</div>'; return; }
-  var sorted = [].concat(ativos).sort(function(a,b){ return b.valor - a.valor; }).slice(0, 8);
-  var maxVal = sorted[0].valor;
-  var cores = ['#185FA5','#E24B4A','#EF9F27','#1D9E75','#7B2D8B','#0891B2','#D97706','#64748B'];
-  var html = '';
-  sorted.forEach(function(c, i){
-    var agora = new Date(); agora.setHours(0,0,0,0);
-    var dataInicio = c.dataDebito || c.dataEmprestimo;
-    var dataInicioObj = dataInicio ? new Date(dataInicio+'T00:00:00') : agora;
-    dataInicioObj.setHours(0,0,0,0);
-    var dias = Math.max(0, Math.floor((agora - dataInicioObj) / 86400000));
-    var pd = {dia:1,semanal:7,quinzenal:15,mensal:30};
-    var qtd = Math.max(1, Math.ceil(dias/(pd[c.periodo]||30)));
-    var r = calcJuros(c.valor, c.taxa, qtd);
-    var pct = Math.max(8, Math.round((r.total / (maxVal * Math.pow(1 + (sorted[0].taxa||5)/100, Math.max(1, Math.ceil(dias/(pd[sorted[0].periodo]||30)))))) * 100));
-    pct = Math.min(pct, 100);
-    var cor = cores[i % cores.length];
-    html += '<div class="chart-bar-row">';
-    html += '<div class="chart-label" title="' + c.nome + '">' + c.nome.split(' ')[0] + '</div>';
-    html += '<div class="chart-bar-bg"><div class="chart-bar-fill" style="width:' + pct + '%;background:' + cor + '"><span class="chart-bar-val">' + fmtR(r.total) + '</span></div></div>';
-    html += '</div>';
-  });
-  div.innerHTML = html;
-}
-
-function exportarBackup() {
-  if (!clientes.length) { toast('Nenhum dado para exportar.'); return; }
-  var json = JSON.stringify({ versao: 1, data: new Date().toISOString(), clientes: clientes }, null, 2);
-  var blob = new Blob([json], { type: 'application/json' });
-  var url = URL.createObjectURL(blob);
-  var a = document.createElement('a');
-  var hoje = new Date();
-  var nome = 'backup_debitos_' + hoje.getFullYear() + '-' + String(hoje.getMonth()+1).padStart(2,'0') + '-' + String(hoje.getDate()).padStart(2,'0') + '.json';
-  a.href = url; a.download = nome; a.click();
-  URL.revokeObjectURL(url);
-  toast('Backup exportado com sucesso!');
-}
-
-function importarBackup(event) {
-  var file = event.target.files[0];
-  if (!file) return;
-  var reader = new FileReader();
-  reader.onload = function(e) {
-    try {
-      var dados = JSON.parse(e.target.result);
-      var lista = dados.clientes || dados;
-      if (!Array.isArray(lista)) throw new Error('Formato inválido');
-      if (!confirm('Restaurar ' + lista.length + ' cliente(s)? Os dados atuais serão substituídos.')) return;
-      clientes = lista;
-      salvar();
-      renderAlertasTopo();
-      renderResumo();
-      toast('Backup restaurado com sucesso!');
-    } catch(err) {
-      toast('Arquivo inválido ou corrompido.');
-    }
-  };
-  reader.readAsText(file);
-  event.target.value = '';
-}
-
+// ===== MODAL BG CLICK =====
 document.getElementById('modal-bg').addEventListener('click', function(e){
   if (e.target === this) fecharModal();
 });
 
-renderAlertasTopo();
+// ===== INICIALIZAÇÃO =====
+verificarLogin();
 
-// Registrar Service Worker para PWA
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', function() {
     navigator.serviceWorker.register('sw.js').catch(function(err) {
@@ -1196,7 +1807,6 @@ if ('serviceWorker' in navigator) {
     });
   });
 }
-
 </script>
 </body>
 </html>
