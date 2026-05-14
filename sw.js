@@ -1,4 +1,4 @@
-const CACHE_NAME = 'debitos-v1';
+const CACHE_NAME = 'debitos-v2';
 const FILES = [
   './index.html',
   './manifest.json',
@@ -10,9 +10,7 @@ const FILES = [
 self.addEventListener('install', function(event) {
   event.waitUntil(
     caches.open(CACHE_NAME).then(function(cache) {
-      return cache.addAll(FILES.filter(f => !f.endsWith('.png') || false));
-    }).catch(function() {
-      return caches.open(CACHE_NAME).then(function(cache) {
+      return cache.addAll(FILES).catch(function() {
         return cache.add('./index.html');
       });
     })
@@ -33,18 +31,21 @@ self.addEventListener('activate', function(event) {
   self.clients.claim();
 });
 
-// Responde requisições do cache (offline first)
+// NETWORK FIRST: tenta a rede, usa cache só se offline
 self.addEventListener('fetch', function(event) {
   event.respondWith(
-    caches.match(event.request).then(function(cached) {
-      return cached || fetch(event.request).then(function(response) {
-        return caches.open(CACHE_NAME).then(function(cache) {
-          cache.put(event.request, response.clone());
-          return response;
-        });
+    fetch(event.request).then(function(response) {
+      // Atualiza o cache com a versão mais recente
+      var respClone = response.clone();
+      caches.open(CACHE_NAME).then(function(cache) {
+        cache.put(event.request, respClone);
       });
+      return response;
     }).catch(function() {
-      return caches.match('./index.html');
+      // Sem internet: usa cache
+      return caches.match(event.request).then(function(cached) {
+        return cached || caches.match('./index.html');
+      });
     })
   );
 });
