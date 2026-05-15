@@ -503,31 +503,6 @@
     padding: 2px 8px; font-size: 11px; font-weight: 600; margin-left: 6px;
   }
 
-  /* MODAL ENVIO WHATSAPP */
-  .modal-envio-zap {
-    display: none; position: fixed; inset: 0; z-index: 300;
-    background: rgba(0,0,0,0.55); align-items: flex-end; justify-content: center;
-  }
-  .modal-envio-zap.open { display: flex; }
-  .modal-envio-box {
-    background: white; border-radius: 20px 20px 0 0;
-    padding: 20px 16px 32px; width: 100%; max-height: 80vh; overflow-y: auto;
-  }
-  .modal-envio-box h3 { font-size: 17px; font-weight: 700; margin-bottom: 14px; }
-  .envio-cli-item {
-    padding: 12px; border: 1.5px solid var(--borda); border-radius: var(--radius-sm);
-    margin-bottom: 8px; cursor: pointer; background: var(--cinza);
-    transition: background 0.15s;
-  }
-  .envio-cli-item:active { background: var(--azul-claro); border-color: var(--azul); }
-  .envio-secao-label { font-size: 12px; font-weight: 700; color: var(--texto2); text-transform: uppercase; letter-spacing: 0.05em; margin: 14px 0 8px; }
-  .envio-manual-row { display: flex; gap: 8px; align-items: center; margin-top: 4px; }
-  .envio-manual-row input { flex: 1; height: 44px; border: 1.5px solid var(--borda); border-radius: var(--radius-sm); padding: 0 14px; font-size: 15px; }
-  .btn-envio-manual { height: 44px; background: #25D366; color: white; border: none; border-radius: var(--radius-sm); font-size: 14px; font-weight: 600; cursor: pointer; padding: 0 16px; white-space: nowrap; }
-  .btn-envio-fechar { width: 100%; height: 44px; background: var(--cinza2); color: var(--texto); border: none; border-radius: var(--radius-sm); font-size: 15px; font-weight: 600; cursor: pointer; margin-top: 14px; }
-
-  /* FIM DO CSS ADICIONADO */
-
   /* EDIT MODE BANNER */
   .edit-banner {
     background: #FFF3CD; border: 1px solid #FFD700; border-radius: var(--radius);
@@ -716,16 +691,16 @@
     </div>
     <div class="fluxo-cards">
       <div class="fluxo-card fc-debito">
-        <div class="fluxo-icon">🔴</div>
-        <div class="fluxo-label">Dinheiro em Débito</div>
+        <div class="fluxo-icon">⏳</div>
+        <div class="fluxo-label">Pendente de Pagamento</div>
         <div class="fluxo-val" id="fc-debito-val">R$ 0,00</div>
-        <div class="fluxo-sub" id="fc-debito-qtd">0 clientes em aberto</div>
+        <div class="fluxo-sub" id="fc-debito-qtd">0 clientes pendentes</div>
       </div>
       <div class="fluxo-card fc-recebido">
         <div class="fluxo-icon">🟢</div>
-        <div class="fluxo-label">Dinheiro Recebido</div>
+        <div class="fluxo-label">Pagamento Recebido</div>
         <div class="fluxo-val" id="fc-recebido-val">R$ 0,00</div>
-        <div class="fluxo-sub" id="fc-recebido-qtd">0 pagamentos</div>
+        <div class="fluxo-sub" id="fc-recebido-qtd">0 recebimentos</div>
       </div>
       <div class="fluxo-card fc-saldo">
         <div style="display:flex;align-items:center;justify-content:space-between">
@@ -775,23 +750,6 @@
 <div id="lightbox">
   <button id="lightbox-close" onclick="fecharLightbox()">✕</button>
   <img id="lightbox-img" src="" alt="Foto ampliada">
-</div>
-
-<!-- MODAL ENVIO WHATSAPP (SIMULAÇÃO) -->
-<div class="modal-envio-zap" id="modal-envio-zap">
-  <div class="modal-envio-box">
-    <div class="modal-handle"></div>
-    <h3>📲 Enviar pelo WhatsApp</h3>
-    <p class="envio-secao-label">🔍 Buscar cliente salvo no sistema</p>
-    <input class="busca-input" id="envio-busca" type="text" placeholder="Digite o nome do cliente..." oninput="buscarClienteEnvio()" autocomplete="off" style="margin-bottom:8px">
-    <div id="envio-resultado"></div>
-    <p class="envio-secao-label">📱 Ou digitar número manualmente</p>
-    <div class="envio-manual-row">
-      <input id="envio-tel-manual" type="tel" placeholder="DDD + número (ex: 85999999999)">
-      <button class="btn-envio-manual" onclick="enviarManualSimulacao()">📤 Enviar</button>
-    </div>
-    <button class="btn-envio-fechar" onclick="fecharEnvioSimulacao()">Cancelar</button>
-  </div>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -1375,6 +1333,7 @@ function abrirModal(idx) {
   html += '<div class="calc-box-title">📊 Situação Atual — ' + qtd + ' período(s) (' + diasDecorridos + ' dias)</div>';
   html += '<div class="calc-row"><span class="ck">Principal</span><span class="cv">' + fmtR(c.valor) + '</span></div>';
   html += '<div class="calc-row"><span class="ck">Taxa</span><span class="cv">' + c.taxa + '% / ' + periodoLabel(c.periodo) + '</span></div>';
+  html += '<div class="calc-row"><span class="ck">Tipo de juros</span><span class="cv">Compostos</span></div>';
   html += '<div class="calc-row"><span class="ck">Período(s)</span><span class="cv">' + qtd + ' ' + periodoLabel(c.periodo).toLowerCase() + '(s)</span></div>';
   html += '<div class="calc-row"><span class="ck">Data do débito</span><span class="cv">' + fmtData(dataInicio) + '</span></div>';
   html += '<div class="calc-row"><span class="ck">Vencimento</span><span class="cv">' + fmtData(c.vencimento) + '</span></div>';
@@ -1402,7 +1361,6 @@ function abrirModal(idx) {
     html += '<div class="calc-row total"><span class="ck">💰 Total a pagar hoje</span><span class="cv">' + fmtR(rAntecipado.total) + '</span></div>';
     html += '</div>';
     html += '<button class="btn-antecipado" onclick="pagarHoje(' + idx + ',' + rAntecipado.total.toFixed(2) + ')">⚡ Registrar pagamento de hoje — ' + fmtR(rAntecipado.total) + '</button>';
-    if (c.tel) html += '<button class="btn-whatsapp" style="margin-top:10px" onclick="enviarWhatsAppCliente(' + idx + ')">📲 Enviar situação pelo WhatsApp</button>';
   }
 
   if (c.cpf) html += '<p style="font-size:13px;color:var(--texto2);margin-top:12px">CPF: ' + c.cpf + '</p>';
@@ -1511,131 +1469,44 @@ function calcular() {
   html += '<div class="calc-row"><span class="ck">Principal</span><span class="cv">' + fmtR(v) + '</span></div>';
   html += '<div class="calc-row"><span class="ck">Taxa indicada</span><span class="cv">' + taxa + '% / ' + periodoLabel(per) + '</span></div>';
   html += '<div class="calc-row"><span class="ck">Período</span><span class="cv">' + qtd + ' ' + labels[per] + '</span></div>';
+  html += '<div class="calc-row"><span class="ck">Tipo de juros</span><span class="cv">Juros compostos</span></div>';
   html += '<div class="calc-row"><span class="ck">Total de juros</span><span class="cv">' + fmtR(r.juros) + '</span></div>';
   html += '<div class="calc-row total"><span class="ck">Total a pagar</span><span class="cv">' + fmtR(r.total) + '</span></div>';
   html += '</div>';
 
-  // Botão WhatsApp com busca de cliente
-  html += '<button class="btn-whatsapp" onclick="abrirEnvioSimulacao(' + v + ',' + taxa + ',\'' + per + '\',' + qtd + ',' + r.juros + ',' + r.total + ')">📲 Enviar resultado pelo WhatsApp</button>';
+  // Botão WhatsApp
+  html += '<button class="btn-whatsapp" onclick="enviarWhatsApp(' + v + ',' + taxa + ',\'' + per + '\',' + qtd + ',' + r.juros + ',' + r.total + ')">📲 Enviar resultado pelo WhatsApp</button>';
 
   div.innerHTML = html;
   div.style.display = 'block';
 }
 
-// ===== WHATSAPP SIMULAÇÃO (com busca de cliente) =====
-function montarMsgSimulacao(principal, taxa, periodo, qtd, juros, total) {
+function enviarWhatsApp(principal, taxa, periodo, qtd, juros, total) {
   var labels = {dia:'dias', semanal:'semanas', quinzenal:'quinzenas', mensal:'meses'};
   var periodoNome = periodoLabel(periodo);
   var unidade = labels[periodo];
-  return '💰 *Simulação de Débito — Gestão de Débitos*\n\n' +
+
+  var msg =
+    '💰 *Simulação de Débito — Gestão de Débitos*\n\n' +
     '📌 *Principal:* ' + fmtR(principal) + '\n' +
     '📈 *Taxa:* ' + taxa + '% / ' + periodoNome + '\n' +
-    '📅 *Período:* ' + qtd + ' ' + unidade + '\n\n' +
+    '📅 *Período:* ' + qtd + ' ' + unidade + '\n' +
+    '🔢 *Tipo de juros:* Compostos\n\n' +
     '💸 *Total de juros:* ' + fmtR(juros) + '\n' +
     '✅ *Total a pagar:* *' + fmtR(total) + '*\n\n' +
     '_Calculado com Gestão de Débitos_';
-}
 
-// Dados temporários do envio
-var _envioSimParams = null;
+  var tel = prompt('Número do WhatsApp (com DDD, somente números):', '');
+  if (tel === null) return; // cancelou
 
-function abrirEnvioSimulacao(principal, taxa, periodo, qtd, juros, total) {
-  _envioSimParams = { principal, taxa, periodo, qtd, juros, total };
-  var modal = document.getElementById('modal-envio-zap');
-  document.getElementById('envio-busca').value = '';
-  document.getElementById('envio-resultado').innerHTML = '';
-  document.getElementById('envio-tel-manual').value = '';
-  modal.classList.add('open');
-  setTimeout(function(){ document.getElementById('envio-busca').focus(); }, 100);
-}
-
-function fecharEnvioSimulacao() {
-  document.getElementById('modal-envio-zap').classList.remove('open');
-}
-
-function buscarClienteEnvio() {
-  var termo = document.getElementById('envio-busca').value.trim().toLowerCase();
-  var res = document.getElementById('envio-resultado');
-  if (!termo) { res.innerHTML = ''; return; }
-  var encontrados = clientes.filter(function(c){ return c.nome.toLowerCase().includes(termo); });
-  if (!encontrados.length) {
-    res.innerHTML = '<div style="font-size:13px;color:var(--texto2);padding:8px 0">Nenhum cliente encontrado.</div>';
-    return;
-  }
-  var html = '';
-  encontrados.forEach(function(c) {
-    var telInfo = c.tel ? c.tel : '<span style="color:#aaa">sem telefone</span>';
-    html += '<div class="envio-cli-item" onclick="selecionarClienteEnvio(\'' + (c.tel||'') + '\',\'' + c.nome.replace(/'/g,"\\'") + '\')">';
-    html += '<div style="font-weight:600;font-size:14px">' + c.nome + '</div>';
-    html += '<div style="font-size:12px;color:var(--texto2)">📱 ' + telInfo + '</div>';
-    html += '</div>';
-  });
-  res.innerHTML = html;
-}
-
-function selecionarClienteEnvio(tel, nome) {
-  var p = _envioSimParams;
-  if (!p) return;
-  var msg = montarMsgSimulacao(p.principal, p.taxa, p.periodo, p.qtd, p.juros, p.total);
-  fecharEnvioSimulacao();
   tel = tel.replace(/\D/g,'');
   if (!tel) {
-    toast('Cliente ' + nome + ' sem telefone. Digite manualmente.');
-    return;
-  }
-  window.open('https://wa.me/55' + tel + '?text=' + encodeURIComponent(msg), '_blank');
-}
-
-function enviarManualSimulacao() {
-  var p = _envioSimParams;
-  if (!p) return;
-  var tel = document.getElementById('envio-tel-manual').value.replace(/\D/g,'');
-  var msg = montarMsgSimulacao(p.principal, p.taxa, p.periodo, p.qtd, p.juros, p.total);
-  fecharEnvioSimulacao();
-  if (!tel) {
+    // Sem número — abre WhatsApp genérico para compartilhar
     window.open('https://wa.me/?text=' + encodeURIComponent(msg), '_blank');
   } else {
+    // Com número — abre conversa direta
     window.open('https://wa.me/55' + tel + '?text=' + encodeURIComponent(msg), '_blank');
   }
-}
-
-function enviarWhatsApp(principal, taxa, periodo, qtd, juros, total) {
-  abrirEnvioSimulacao(principal, taxa, periodo, qtd, juros, total);
-}
-
-// ===== WHATSAPP DIRETO DO MODAL DO CLIENTE =====
-function enviarWhatsAppCliente(idx) {
-  var c = clientes[idx];
-  var agora = new Date(); agora.setHours(0,0,0,0);
-  var dataInicio = c.dataDebito || c.dataEmprestimo;
-  var dataInicioObj = dataInicio ? new Date(dataInicio+'T00:00:00') : agora;
-  dataInicioObj.setHours(0,0,0,0);
-  var diasDecorridos = Math.max(0, Math.floor((agora - dataInicioObj) / 86400000));
-  var pd = {dia:1, semanal:7, quinzenal:15, mensal:30};
-  var qtd = Math.max(1, Math.ceil(diasDecorridos / (pd[c.periodo]||30)));
-  var r = calcJuros(c.valor, c.taxa, qtd);
-  var rAnt = calcJurosDias(c.valor, c.taxa, c.periodo, diasDecorridos);
-  var dataHoje = new Date().toLocaleDateString('pt-BR');
-
-  var msg = '📋 *Extrato de Débito — Gestão de Débitos*\n\n' +
-    '👤 *Cliente:* ' + c.nome + '\n' +
-    '📌 *Principal:* ' + fmtR(c.valor) + '\n' +
-    '📈 *Taxa:* ' + c.taxa + '% / ' + periodoLabel(c.periodo) + '\n' +
-    '📅 *Vencimento:* ' + fmtData(c.vencimento) + '\n\n' +
-    '💸 *Total de juros:* ' + fmtR(r.juros) + '\n' +
-    '✅ *Total a pagar:* *' + fmtR(r.total) + '*\n';
-
-  if (!c.pago) {
-    msg += '\n⚡ *Pagamento antecipado hoje (' + dataHoje + '):* *' + fmtR(rAnt.total) + '*\n';
-  }
-  msg += '\n_Gestão de Débitos_';
-
-  var tel = (c.tel || '').replace(/\D/g,'');
-  if (!tel) {
-    toast('Cliente sem telefone cadastrado.');
-    return;
-  }
-  window.open('https://wa.me/55' + tel + '?text=' + encodeURIComponent(msg), '_blank');
 }
 
 // ===== RESUMO / FLUXO DE CAIXA =====
@@ -1678,7 +1549,12 @@ function renderFluxoCaixa() {
     periodoStr = 'Ano de ' + range.inicio.getFullYear();
   }
 
-  // Dinheiro em débito: clientes NÃO pagos, cujo vencimento está no período
+  var agora = new Date(); agora.setHours(0,0,0,0);
+  var pd = {dia:1, semanal:7, quinzenal:15, mensal:30};
+
+  // PENDENTE DE PAGAMENTO: todos os clientes NÃO pagos (atrasados e em dia)
+  // cujo vencimento cai dentro do período selecionado
+  // soma principal + juros compostos acumulados até hoje
   var emDebito = clientes.filter(function(c) {
     if (c.pago) return false;
     var venc = parseData(c.vencimento);
@@ -1686,34 +1562,49 @@ function renderFluxoCaixa() {
     return venc >= range.inicio && venc <= range.fim;
   });
   var totalDebito = emDebito.reduce(function(acc, c) {
-    var agora = new Date(); agora.setHours(0,0,0,0);
     var dataInicio = c.dataDebito || c.dataEmprestimo;
-    var dataInicioObj = dataInicio ? new Date(dataInicio+'T00:00:00') : agora;
-    dataInicioObj.setHours(0,0,0,0);
-    var dias = Math.max(0, Math.floor((agora - dataInicioObj) / 86400000));
-    var pd = {dia:1, semanal:7, quinzenal:15, mensal:30};
-    var qtd = Math.max(1, Math.ceil(dias/(pd[c.periodo]||30)));
+    var di = dataInicio ? new Date(dataInicio + 'T00:00:00') : agora;
+    di.setHours(0,0,0,0);
+    var dias = Math.max(0, Math.floor((agora - di) / 86400000));
+    var qtd = Math.max(1, Math.ceil(dias / (pd[c.periodo] || 30)));
     return acc + calcJuros(c.valor, c.taxa, qtd).total;
   }, 0);
 
-  // Dinheiro recebido: clientes PAGOS no período
-  var pagosNoPeriodo = clientes.filter(function(c) {
-    if (!c.pago) return false;
-    var dp = c.dataPagamento ? parseData(c.dataPagamento) : null;
-    if (!dp) return false;
-    return dp >= range.inicio && dp <= range.fim;
-  });
-  var totalRecebido = pagosNoPeriodo.reduce(function(acc, c) {
-    return acc + (c.valorPago || c.valor || 0);
-  }, 0);
+  // RECEBIDO: soma de tudo que entrou no período — pagamentos completos (valorPago ou valor)
+  // + pagamentos de juros isolados (histórico tipo 'juros_pago') de qualquer cliente
+  var totalRecebido = 0;
+  var qtdRecebimentos = 0;
 
-  // Saldo = recebido - débito pendente (do período)
+  clientes.forEach(function(c) {
+    // Pagamento total (principal + juros) registrado no período
+    if (c.pago && c.dataPagamento) {
+      var dp = parseData(c.dataPagamento);
+      if (dp && dp >= range.inicio && dp <= range.fim) {
+        totalRecebido += (c.valorPago || c.valor || 0);
+        qtdRecebimentos++;
+      }
+    }
+    // Juros pagos isoladamente (débito recorrente) dentro do período
+    if (c.historico && c.historico.length) {
+      c.historico.forEach(function(h) {
+        if (h.tipo === 'juros_pago' && h.data) {
+          var dh = parseData(h.data);
+          if (dh && dh >= range.inicio && dh <= range.fim) {
+            totalRecebido += (h.valorJuros || 0);
+            qtdRecebimentos++;
+          }
+        }
+      });
+    }
+  });
+
+  // SALDO: recebido − débito pendente
   var saldo = totalRecebido - totalDebito;
 
   document.getElementById('fc-debito-val').textContent = fmtR(totalDebito);
-  document.getElementById('fc-debito-qtd').textContent = emDebito.length + ' cliente(s) em aberto';
+  document.getElementById('fc-debito-qtd').textContent = emDebito.length + ' cliente(s) pendente(s)';
   document.getElementById('fc-recebido-val').textContent = fmtR(totalRecebido);
-  document.getElementById('fc-recebido-qtd').textContent = pagosNoPeriodo.length + ' pagamento(s)';
+  document.getElementById('fc-recebido-qtd').textContent = qtdRecebimentos + ' recebimento(s) no período';
   document.getElementById('fc-saldo-val').textContent = fmtR(saldo);
   var saldoEl = document.getElementById('fc-saldo-val');
   saldoEl.style.color = saldo >= 0 ? '#185FA5' : '#A32D2D';
@@ -1899,6 +1790,7 @@ function gerarPDF() {
         <tr><td style="color:#1a4a7a;">Principal</td><td>${fmtR(c.valor)}</td></tr>
         <tr><td style="color:#1a4a7a;">Taxa indicada</td><td>${c.taxa}% / ${periodoLabel(c.periodo)}</td></tr>
         <tr><td style="color:#1a4a7a;">Período</td><td>${qtd} ${periodoLabel(c.periodo).toLowerCase()}(s)</td></tr>
+        <tr><td style="color:#1a4a7a;">Tipo de juros</td><td>Compostos</td></tr>
         <tr><td style="color:#1a4a7a;">Data do débito</td><td>${fmtData(dataInicio)}</td></tr>
         <tr><td style="color:#1a4a7a;">Vencimento</td><td>${fmtData(c.vencimento)}</td></tr>
         <tr><td style="color:#1a4a7a;">Total de juros</td><td>${fmtR(r.juros)}</td></tr>
