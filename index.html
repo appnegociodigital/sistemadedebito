@@ -357,21 +357,39 @@
   .stat-lbl { font-size: 12px; color: var(--texto2); margin-top: 3px; }
 
   /* FLUXO DE CAIXA */
-  .fluxo-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
-  .fluxo-card {
-    background: var(--branco); border-radius: var(--radius);
-    padding: 14px 12px; box-shadow: 0 1px 4px rgba(0,0,0,0.08);
-    border-top: 3px solid transparent;
+  .fc-row {
+    display: flex; align-items: center; gap: 12px;
+    padding: 11px 0;
   }
-  .fluxo-card.fc-debito { border-top-color: #E24B4A; }
-  .fluxo-card.fc-recebido { border-top-color: #1D9E75; }
-  .fluxo-card.fc-saldo { border-top-color: var(--azul); grid-column: 1 / -1; }
-  .fluxo-icon { font-size: 20px; margin-bottom: 6px; }
-  .fluxo-label { font-size: 11px; font-weight: 700; color: var(--texto2); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; }
-  .fluxo-val { font-size: 20px; font-weight: 700; color: var(--texto); line-height: 1.1; }
-  .fluxo-card.fc-debito .fluxo-val { color: var(--vermelho); }
-  .fluxo-card.fc-recebido .fluxo-val { color: #1D9E75; }
-  .fluxo-card.fc-saldo .fluxo-val { color: var(--azul); font-size: 22px; }
+  .fc-row-saida { opacity: 1; }
+  .fc-row-entrada { opacity: 1; }
+  .fc-row-icon { font-size: 22px; flex-shrink: 0; width: 32px; text-align: center; }
+  .fc-row-info { flex: 1; min-width: 0; }
+  .fc-row-label { font-size: 13px; font-weight: 600; color: var(--texto); display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+  .fc-row-sub { font-size: 11px; color: var(--texto2); margin-top: 2px; }
+  .fc-row-val { font-size: 15px; font-weight: 700; flex-shrink: 0; text-align: right; }
+  .fc-val-saida { color: #A32D2D; }
+  .fc-val-entrada { color: #1D9E75; }
+  .fc-row-badge {
+    font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 20px;
+    letter-spacing: 0.04em; flex-shrink: 0;
+  }
+  .fc-badge-saida { background: #FCEBEB; color: #A32D2D; border: 1px solid #F09595; }
+  .fc-badge-entrada { background: #EAF3DE; color: #27500A; border: 1px solid #97C459; }
+  .fc-divisor { border: none; border-top: 1.5px dashed var(--cinza2); margin: 4px 0; }
+  .fc-row-total-rec {
+    background: var(--cinza); border-radius: var(--radius-sm);
+    padding: 10px 12px; margin: 6px 0;
+  }
+  .fc-saldo-final {
+    border-radius: var(--radius-sm);
+    padding: 14px 16px; margin-top: 10px;
+    background: var(--azul); color: white;
+  }
+  .fc-saldo-label { font-size: 12px; font-weight: 700; color: rgba(255,255,255,0.85); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; }
+  .fc-saldo-sub { font-size: 11px; color: rgba(255,255,255,0.65); }
+  .fc-saldo-val { font-size: 24px; font-weight: 700; color: white; }
+  .fc-saldo-final.saldo-neg { background: var(--vermelho); }
   .fluxo-periodo-row {
     display: flex; gap: 6px; margin-bottom: 12px; justify-content: flex-end;
   }
@@ -380,7 +398,6 @@
     font-size: 12px; font-weight: 600; background: var(--branco); color: var(--texto2); cursor: pointer;
   }
   .pbtn.active { background: var(--azul); color: white; border-color: var(--azul); }
-  .fluxo-sub { font-size: 11px; color: var(--texto2); margin-top: 4px; }
 
   /* CALC RESULT */
   .calc-box {
@@ -681,7 +698,7 @@
 
   <!-- FLUXO DE CAIXA -->
   <div class="card">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
       <p class="card-title" style="margin-bottom:0">💵 Fluxo de Caixa</p>
       <div class="fluxo-periodo-row" style="margin-bottom:0">
         <button class="pbtn active" id="pbtn-mes" onclick="setFluxoPeriodo('mes',this)">Mês</button>
@@ -689,28 +706,59 @@
         <button class="pbtn" id="pbtn-ano" onclick="setFluxoPeriodo('ano',this)">Ano</button>
       </div>
     </div>
-    <div class="fluxo-cards">
-      <div class="fluxo-card fc-debito">
-        <div class="fluxo-icon">⏳</div>
-        <div class="fluxo-label">Pendente de Pagamento</div>
-        <div class="fluxo-val" id="fc-debito-val">R$ 0,00</div>
-        <div class="fluxo-sub" id="fc-debito-qtd">0 clientes pendentes</div>
+
+    <!-- Linha 1: Emprestado (saída) -->
+    <div class="fc-row fc-row-saida">
+      <div class="fc-row-icon">💸</div>
+      <div class="fc-row-info">
+        <div class="fc-row-label">Capital Emprestado <span class="fc-row-badge fc-badge-saida">SAÍDA</span></div>
+        <div class="fc-row-sub" id="fc-emprestado-qtd">0 empréstimo(s) no período</div>
       </div>
-      <div class="fluxo-card fc-recebido">
-        <div class="fluxo-icon">🟢</div>
-        <div class="fluxo-label">Pagamento Recebido</div>
-        <div class="fluxo-val" id="fc-recebido-val">R$ 0,00</div>
-        <div class="fluxo-sub" id="fc-recebido-qtd">0 recebimentos</div>
+      <div class="fc-row-val fc-val-saida" id="fc-emprestado-val">R$ 0,00</div>
+    </div>
+
+    <div class="fc-divisor"></div>
+
+    <!-- Linha 2: Recebido Capital -->
+    <div class="fc-row fc-row-entrada">
+      <div class="fc-row-icon">✅</div>
+      <div class="fc-row-info">
+        <div class="fc-row-label">Capital + Juros Recebido <span class="fc-row-badge fc-badge-entrada">ENTRADA</span></div>
+        <div class="fc-row-sub" id="fc-capital-qtd">0 quitação(ões) no período</div>
       </div>
-      <div class="fluxo-card fc-saldo">
-        <div style="display:flex;align-items:center;justify-content:space-between">
-          <div>
-            <div class="fluxo-icon">📈</div>
-            <div class="fluxo-label">Saldo do Período</div>
-            <div class="fluxo-val" id="fc-saldo-val">R$ 0,00</div>
-            <div class="fluxo-sub" id="fc-saldo-periodo">Período: este mês</div>
-          </div>
+      <div class="fc-row-val fc-val-entrada" id="fc-capital-val">R$ 0,00</div>
+    </div>
+
+    <!-- Linha 3: Recebido Só Juros -->
+    <div class="fc-row fc-row-entrada">
+      <div class="fc-row-icon">💰</div>
+      <div class="fc-row-info">
+        <div class="fc-row-label">Somente Juros Recebido <span class="fc-row-badge fc-badge-entrada">ENTRADA</span></div>
+        <div class="fc-row-sub" id="fc-juros-qtd">0 pagamento(s) de juros</div>
+      </div>
+      <div class="fc-row-val fc-val-entrada" id="fc-juros-val">R$ 0,00</div>
+    </div>
+
+    <div class="fc-divisor"></div>
+
+    <!-- Linha 4: Total Recebido -->
+    <div class="fc-row fc-row-total-rec">
+      <div class="fc-row-icon">🧾</div>
+      <div class="fc-row-info">
+        <div class="fc-row-label" style="font-weight:700">Total Recebido no Caixa</div>
+        <div class="fc-row-sub" id="fc-recebido-qtd">0 recebimento(s)</div>
+      </div>
+      <div class="fc-row-val" id="fc-recebido-val" style="font-size:16px;font-weight:700;color:#1D9E75">R$ 0,00</div>
+    </div>
+
+    <!-- Saldo Final -->
+    <div class="fc-saldo-final" id="fc-saldo-bloco">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div>
+          <div class="fc-saldo-label" id="fc-saldo-icon-label">📈 Saldo Final (Recebido − Emprestado)</div>
+          <div class="fc-saldo-sub" id="fc-saldo-periodo">Período: este mês</div>
         </div>
+        <div class="fc-saldo-val" id="fc-saldo-val">R$ 0,00</div>
       </div>
     </div>
   </div>
@@ -1400,15 +1448,34 @@ function pagarHoje(idx, valorTotal) {
 
 function fecharModal() { document.getElementById('modal-bg').classList.remove('open'); }
 
+function calcValorPago(c) {
+  var agora = new Date(); agora.setHours(0,0,0,0);
+  var dataInicio = c.dataDebito || c.dataEmprestimo;
+  var di = dataInicio ? new Date(dataInicio + 'T00:00:00') : agora;
+  di.setHours(0,0,0,0);
+  var dias = Math.max(0, Math.floor((agora - di) / 86400000));
+  var pd = {dia:1, semanal:7, quinzenal:15, mensal:30};
+  var qtd = Math.max(1, Math.ceil(dias / (pd[c.periodo] || 30)));
+  return calcJuros(c.valor, c.taxa, qtd).total;
+}
+
 function marcarPago() {
   if (modalIdx < 0) return;
-  clientes[modalIdx].pago = true; salvar(); fecharModal();
+  var c = clientes[modalIdx];
+  c.pago = true;
+  if (!c.dataPagamento) c.dataPagamento = new Date().toISOString().split('T')[0];
+  if (!c.valorPago) c.valorPago = parseFloat(calcValorPago(c).toFixed(2));
+  salvar(); fecharModal();
   renderAlertasTopo(); renderClientes();
   toast('Marcado como pago!');
 }
 
 function marcarPagoIdx(idx) {
-  clientes[idx].pago = true; salvar();
+  var c = clientes[idx];
+  c.pago = true;
+  if (!c.dataPagamento) c.dataPagamento = new Date().toISOString().split('T')[0];
+  if (!c.valorPago) c.valorPago = parseFloat(calcValorPago(c).toFixed(2));
+  salvar();
   renderAlertasTopo(); renderClientes();
   toast('Marcado como pago!');
 }
@@ -1549,66 +1616,88 @@ function renderFluxoCaixa() {
     periodoStr = 'Ano de ' + range.inicio.getFullYear();
   }
 
-  var agora = new Date(); agora.setHours(0,0,0,0);
-  var pd = {dia:1, semanal:7, quinzenal:15, mensal:30};
-
-  // PENDENTE DE PAGAMENTO: todos os clientes NÃO pagos (atrasados e em dia)
-  // cujo vencimento cai dentro do período selecionado
-  // soma principal + juros compostos acumulados até hoje
-  var emDebito = clientes.filter(function(c) {
-    if (c.pago) return false;
-    var venc = parseData(c.vencimento);
-    if (!venc) return false;
-    return venc >= range.inicio && venc <= range.fim;
-  });
-  var totalDebito = emDebito.reduce(function(acc, c) {
+  // ── 1. CAPITAL EMPRESTADO (saídas): soma dos valores principais
+  //       cujo dataDebito/dataEmprestimo cai dentro do período
+  var totalEmprestado = 0;
+  var qtdEmprestimos = 0;
+  clientes.forEach(function(c) {
     var dataInicio = c.dataDebito || c.dataEmprestimo;
-    var di = dataInicio ? new Date(dataInicio + 'T00:00:00') : agora;
-    di.setHours(0,0,0,0);
-    var dias = Math.max(0, Math.floor((agora - di) / 86400000));
-    var qtd = Math.max(1, Math.ceil(dias / (pd[c.periodo] || 30)));
-    return acc + calcJuros(c.valor, c.taxa, qtd).total;
-  }, 0);
+    if (!dataInicio) return;
+    var di = parseData(dataInicio);
+    if (di && di >= range.inicio && di <= range.fim) {
+      totalEmprestado += (c.valor || 0);
+      qtdEmprestimos++;
+    }
+  });
 
-  // RECEBIDO: soma de tudo que entrou no período — pagamentos completos (valorPago ou valor)
-  // + pagamentos de juros isolados (histórico tipo 'juros_pago') de qualquer cliente
-  var totalRecebido = 0;
-  var qtdRecebimentos = 0;
+  // ── 2. CAPITAL + JUROS RECEBIDO: quitações completas (pago = true)
+  //       usa dataPagamento para filtrar período
+  var totalCapital = 0;
+  var qtdCapital = 0;
+
+  // ── 3. SOMENTE JUROS RECEBIDO: histórico tipo 'juros_pago'
+  var totalJuros = 0;
+  var qtdJuros = 0;
 
   clientes.forEach(function(c) {
-    // Pagamento total (principal + juros) registrado no período
-    if (c.pago && c.dataPagamento) {
-      var dp = parseData(c.dataPagamento);
+    // Pagamento completo (débito quitado)
+    if (c.pago) {
+      var dp = c.dataPagamento ? parseData(c.dataPagamento) : null;
+      var vp = parseFloat(c.valorPago || c.valor || 0);
       if (dp && dp >= range.inicio && dp <= range.fim) {
-        totalRecebido += (c.valorPago || c.valor || 0);
-        qtdRecebimentos++;
+        totalCapital += vp;
+        qtdCapital++;
+      } else if (!dp) {
+        // Sem data registrada: conta sempre (dados legados sem dataPagamento)
+        totalCapital += vp;
+        qtdCapital++;
       }
     }
-    // Juros pagos isoladamente (débito recorrente) dentro do período
+    // Somente juros (débito recorrente, principal não quitado)
     if (c.historico && c.historico.length) {
       c.historico.forEach(function(h) {
         if (h.tipo === 'juros_pago' && h.data) {
           var dh = parseData(h.data);
           if (dh && dh >= range.inicio && dh <= range.fim) {
-            totalRecebido += (h.valorJuros || 0);
-            qtdRecebimentos++;
+            totalJuros += (h.valorJuros || 0);
+            qtdJuros++;
           }
         }
       });
     }
   });
 
-  // SALDO: recebido − débito pendente
-  var saldo = totalRecebido - totalDebito;
+  var totalRecebido = totalCapital + totalJuros;
+  var qtdRecebimentos = qtdCapital + qtdJuros;
 
-  document.getElementById('fc-debito-val').textContent = fmtR(totalDebito);
-  document.getElementById('fc-debito-qtd').textContent = emDebito.length + ' cliente(s) pendente(s)';
+  // ── 4. SALDO FINAL: total recebido − capital emprestado
+  var saldo = totalRecebido - totalEmprestado;
+
+  // Atualiza DOM
+  document.getElementById('fc-emprestado-val').textContent = fmtR(totalEmprestado);
+  document.getElementById('fc-emprestado-qtd').textContent = qtdEmprestimos + ' empréstimo(s) no período';
+
+  document.getElementById('fc-capital-val').textContent = fmtR(totalCapital);
+  document.getElementById('fc-capital-qtd').textContent = qtdCapital + ' quitação(ões) no período';
+
+  document.getElementById('fc-juros-val').textContent = fmtR(totalJuros);
+  document.getElementById('fc-juros-qtd').textContent = qtdJuros + ' pagamento(s) de juros';
+
   document.getElementById('fc-recebido-val').textContent = fmtR(totalRecebido);
-  document.getElementById('fc-recebido-qtd').textContent = qtdRecebimentos + ' recebimento(s) no período';
+  document.getElementById('fc-recebido-qtd').textContent = qtdRecebimentos + ' recebimento(s) no total';
+
   document.getElementById('fc-saldo-val').textContent = fmtR(saldo);
-  var saldoEl = document.getElementById('fc-saldo-val');
-  saldoEl.style.color = saldo >= 0 ? '#185FA5' : '#A32D2D';
   document.getElementById('fc-saldo-periodo').textContent = 'Período: ' + periodoStr;
+
+  var blocoSaldo = document.getElementById('fc-saldo-bloco');
+  var iconLabel  = document.getElementById('fc-saldo-icon-label');
+  if (saldo >= 0) {
+    blocoSaldo.classList.remove('saldo-neg');
+    iconLabel.textContent = '📈 Saldo Final (Recebido − Emprestado)';
+  } else {
+    blocoSaldo.classList.add('saldo-neg');
+    iconLabel.textContent = '📉 Saldo Final (Recebido − Emprestado)';
+  }
 }
 
 function renderResumo() {
